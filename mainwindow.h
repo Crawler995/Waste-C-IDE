@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "components/workarea.h"
+
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QMenu>
@@ -20,6 +22,7 @@ private:
     void initWindowSize();
     void createMenu();
     void createStatusBar();
+    void createWorkArea();
     void initStyle();
 
     QMenuBar *mainMenuBar;
@@ -33,8 +36,13 @@ private:
     QMenu *runMenu;
     QAction *compileAction, *runAction, *compileRunAction, *debugAction;
 
+    QMenu *settingMenu;
+    QAction *editorSettingAction;
+
     QStatusBar *mainStatusBar;
     QLabel *cursorPositionLabel, *totalLineNumLabel;
+
+    WorkArea *workArea;
 };
 
 #endif // MAINWINDOW_H

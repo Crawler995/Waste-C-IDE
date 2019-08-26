@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     initWindowSize();
     initStyle();
     createMenu();
+    createWorkArea();
     createStatusBar();
 }
 
@@ -16,7 +17,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::initWindowSize() {
-    resize(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    this->showMaximized();
 }
 
 void MainWindow::createMenu() {
@@ -35,6 +36,9 @@ void MainWindow::createMenu() {
     compileAction = runMenu->addAction(tr("编译"));
     runAction = runMenu->addAction(tr("运行"));
     compileRunAction = runMenu->addAction(tr("编译运行"));
+
+    settingMenu = mainMenuBar->addMenu(tr("设置"));
+    editorSettingAction = settingMenu->addAction(tr("编辑器设置"));
 }
 
 void MainWindow::createStatusBar()
@@ -46,6 +50,12 @@ void MainWindow::createStatusBar()
 
     mainStatusBar->addPermanentWidget(cursorPositionLabel, 3);
     mainStatusBar->addWidget(totalLineNumLabel, 4);
+}
+
+void MainWindow::createWorkArea()
+{
+    workArea = new WorkArea(this);
+    this->setCentralWidget(workArea);
 }
 
 void MainWindow::initStyle()
