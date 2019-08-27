@@ -25,9 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    components/workarea.cpp
+    components/workarea.cpp \
+    components/editorarea.cpp \
+    components/editor.cpp \
+    components/debuginfoarea.cpp \
+    components/runoutputarea.cpp
 
 HEADERS  += mainwindow.h \
     features/config.h \
     features/colorboard.h \
-    components/workarea.h
+    components/workarea.h \
+    components/editorarea.h \
+    components/editor.h \
+    components/debuginfoarea.h \
+    components/runoutputarea.h

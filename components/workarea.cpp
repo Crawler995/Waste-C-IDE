@@ -1,27 +1,61 @@
 #include "workarea.h"
+#include "features/colorboard.h"
 
-WorkArea::WorkArea(QWidget *parent) : QWidget(parent)
+#include <QApplication>
+
+WorkArea::WorkArea(QWidget *parent) : QSplitter(parent)
 {
+    setOrientation(Qt::Horizontal);
+
+    debugInfoArea = new DebugInfoArea(this);
     vSplitter = new QSplitter(Qt::Vertical, this);
 
-    hSplitter = new QSplitter(Qt::Horizontal);
-    debugInfoArea = new QWidget(hSplitter);
-    debugInfoArea->setStyleSheet("background: red");
-    editorArea = new QWidget(hSplitter);
-    editorArea->setStyleSheet("background: green");
+    editorArea = new EditorArea(vSplitter);
+    runOutputArea = new RunOutputArea(vSplitter);
+//    this->setStretchFactor(0, 2);
+//    this->setStretchFactor(1, 5);
+//    vSplitter->setStretchFactor(0, 4);
+//    vSplitter->setStretchFactor(1, 1);
 
-    runOutputArea = new QWidget();
-    runOutputArea->setStyleSheet("background: yellow");
+    setHStretchFactor(debugInfoArea, 2);
+    setHStretchFactor(vSplitter, 5);
+    setVStretchFactor(editorArea, 4);
+    setVStretchFactor(runOutputArea, 1);
 
-    vSplitter->addWidget(hSplitter);
-    vSplitter->addWidget(runOutputArea);
-    vSplitter->setStretchFactor(0, 4);
-    vSplitter->setStretchFactor(1, 1);
 
-    hSplitter->setStretchFactor(0, 1);
-    hSplitter->setStretchFactor(1, 4);
+    initStyle();
+}
 
-    layout = new QGridLayout(this);
-    layout->addWidget(vSplitter);
-    setLayout(layout);
+void WorkArea::initStyle() {
+    editorArea->setAttribute(Qt::WA_StyledBackground);
+    editorArea->setStyleSheet("QTabWidget::pane{border: none; background: " + ColorBoard::black3 + ";}"
+                              "QTabBar::tab{background: " + ColorBoard::black2 + ";"
+                              "color: " + ColorBoard::lightGray + ";"
+                              "padding: 10px 30px 10px 30px;}"
+                              "QTabBar::tab:selected{background: " + ColorBoard::black3 + "; "
+                              "border-bottom: 2px solid " + ColorBoard::blue + ";}");
+    debugInfoArea->setAttribute(Qt::WA_StyledBackground);
+    debugInfoArea->setStyleSheet("background: " + ColorBoard::black2 + ";");
+    runOutputArea->setAttribute(Qt::WA_StyledBackground);
+    runOutputArea->setStyleSheet("background: " + ColorBoard::black3 + ";");
+    vSplitter->setHandleWidth(0);
+    this->setHandleWidth(0);
+}
+
+void WorkArea::setVStretchFactor(QWidget *widget, int factor)
+{
+    QSizePolicy policy = widget->sizePolicy();
+    policy.setVerticalStretch(factor);
+    policy.setHorizontalPolicy(QSizePolicy::Maximum);
+    policy.setVerticalPolicy(QSizePolicy::Maximum);
+    widget->setSizePolicy(policy);
+}
+
+void WorkArea::setHStretchFactor(QWidget *widget, int factor)
+{
+    QSizePolicy policy = widget->sizePolicy();
+    policy.setHorizontalStretch(factor);
+    policy.setHorizontalPolicy(QSizePolicy::Maximum);
+    policy.setVerticalPolicy(QSizePolicy::Maximum);
+    widget->setSizePolicy(policy);
 }
