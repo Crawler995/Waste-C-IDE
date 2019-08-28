@@ -5,6 +5,7 @@
 
 #include <QWidget>
 #include <QTabWidget>
+#include <QVector>
 
 class EditorArea : public QTabWidget
 {
@@ -12,9 +13,18 @@ class EditorArea : public QTabWidget
 public:
     explicit EditorArea(QWidget *parent = 0);
 
+    QTextEdit* getCurEditor();
+    void createEditor();
+    void saveCurEditorToFile();
+
 private:
     void initStyle();
-    Editor *editor1, *editor2;
+    QString getCurEditorText();
+
+    QVector<Editor*> editors;
+
+signals:
+    void cursorPositionChangedWithPos(int row, int col, int totalRowNum);
 };
 
 #endif // EDITORAREA_H

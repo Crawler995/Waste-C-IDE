@@ -12,14 +12,10 @@ WorkArea::WorkArea(QWidget *parent) : QSplitter(parent)
 
     editorArea = new EditorArea(vSplitter);
     runOutputArea = new RunOutputArea(vSplitter);
-//    this->setStretchFactor(0, 2);
-//    this->setStretchFactor(1, 5);
-//    vSplitter->setStretchFactor(0, 4);
-//    vSplitter->setStretchFactor(1, 1);
 
-    setHStretchFactor(debugInfoArea, 2);
+    setHStretchFactor(debugInfoArea, 6);
     setHStretchFactor(vSplitter, 5);
-    setVStretchFactor(editorArea, 4);
+    setVStretchFactor(editorArea, 6);
     setVStretchFactor(runOutputArea, 1);
 
 
@@ -31,6 +27,7 @@ void WorkArea::initStyle() {
     editorArea->setStyleSheet("QTabWidget::pane{border: none; background: " + ColorBoard::black3 + ";}"
                               "QTabBar::tab{background: " + ColorBoard::black2 + ";"
                               "color: " + ColorBoard::lightGray + ";"
+                              "font-size: 16px;"
                               "padding: 10px 30px 10px 30px;}"
                               "QTabBar::tab:selected{background: " + ColorBoard::black3 + "; "
                               "border-bottom: 2px solid " + ColorBoard::blue + ";}");
@@ -58,4 +55,9 @@ void WorkArea::setHStretchFactor(QWidget *widget, int factor)
     policy.setHorizontalPolicy(QSizePolicy::Maximum);
     policy.setVerticalPolicy(QSizePolicy::Maximum);
     widget->setSizePolicy(policy);
+}
+
+EditorArea *WorkArea::getEditorArea() const
+{
+    return editorArea;
 }

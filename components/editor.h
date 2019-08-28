@@ -11,6 +11,8 @@ class Editor : public QWidget
 public:
     explicit Editor(QWidget *parent = 0);
 
+    QTextEdit *getTextEdit() const;
+
 private:
     QTextEdit *textEdit;
     QHBoxLayout *layout;

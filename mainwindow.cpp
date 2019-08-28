@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
 
     initStyle();
+
+    connectSignalAndSlot();
 }
 
 MainWindow::~MainWindow()
@@ -20,8 +22,9 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::initWindowSize() {
-    this->showMaximized();
-    setFont(QFont("Microsoft Yahei, consolas"));
+    window()->showMaximized();
+    QApplication::setFont(QFont("Microsoft Yahei"));
+    setMinimumSize(500, 500);
 }
 
 void MainWindow::createMenu() {
@@ -50,7 +53,7 @@ void MainWindow::createStatusBar()
     mainStatusBar = this->statusBar();
 
     cursorPositionLabel = new QLabel(tr("0行0列"), mainStatusBar);
-    totalLineNumLabel = new QLabel(tr("共99行"), mainStatusBar);
+    totalLineNumLabel = new QLabel(tr("共0行"), mainStatusBar);
 
     mainStatusBar->addPermanentWidget(cursorPositionLabel, 3);
     mainStatusBar->addPermanentWidget(totalLineNumLabel, 4);
@@ -68,19 +71,38 @@ void MainWindow::initStyle()
     setStyleSheet(
         "QMainWindow{background-color: " + ColorBoard::black3 + ";}"
 
-        "QMenuBar{background-color: " + ColorBoard::black1 + "; color: " + ColorBoard::lightGray + ";border:none; padding: 0px;}"
-        "QMenuBar::item{background-color: " + ColorBoard::black1 + "; color: " + ColorBoard::lightGray + ";padding: 3px 10px 3px 10px;}"
+        "QMenuBar{background-color: " + ColorBoard::black1 + "; color: " + ColorBoard::lightGray + ";border:none; padding: 0px; font-size: 16px;}"
+        "QMenuBar::item{background-color: " + ColorBoard::black1 + "; color: " + ColorBoard::lightGray + ";padding: 3px 12px 3px 12px;}"
         "QMenuBar::item:selected{background-color: " + ColorBoard::black2 + ";}"
 
         "QMenu{background-color: " + ColorBoard::black1 + ";color: " + ColorBoard::lightGray + ";}"
-        "QMenu::item{background-color: " + ColorBoard::black1 + "; color: " + ColorBoard::lightGray + ";padding: 3px 30px 3px 30px;}"
+        "QMenu::item{background-color: " + ColorBoard::black1 + "; color: " + ColorBoard::lightGray + ";padding: 3px 30px 3px 30px; font-size: 16px;}"
         "QMenu::item:selected{background-color: " + ColorBoard::black2 + ";}"
         "QMenu::icon{padding-left: 8px;}"
 
         "QStatusBar{background-color: " + ColorBoard::blue + ";}"
-        "QStatusBar::item{border: none;}"
+        "QStatusBar::item{border: none; padding: 0px;}"
     );
 
-    cursorPositionLabel->setStyleSheet("color: " + ColorBoard::white + ";");
-    totalLineNumLabel->setStyleSheet("color: " + ColorBoard::white + ";");
+    cursorPositionLabel->setStyleSheet("color: " + ColorBoard::white + "; padding-left: 6px; font-size: 14px;");
+    totalLineNumLabel->setStyleSheet("color: " + ColorBoard::white + "; font-size: 14px;");
 }
+
+void MainWindow::connectSignalAndSlot()
+{
+    connect(workArea->getEditorArea(), &EditorArea::cursorPositionChangedWithPos,
+            this, [=](int row, int col, int totalRowNum) {
+        cursorPositionLabel->setText(tr("%1行%2列").arg(row).arg(col));
+        totalLineNumLabel->setText(tr("共%1行").arg(totalRowNum));
+    });
+
+    connect(newFileAction, &QAction::triggered,
+            this, [=]() {
+        workArea->getEditorArea()->createEditor();
+    });
+    connect(saveFileAction, &QAction::triggered,
+            this, [=]() {
+        workArea->getEditorArea()->saveCurEditorToFile();
+    });
+}
+

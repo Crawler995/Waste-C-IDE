@@ -29,7 +29,9 @@ SOURCES += main.cpp\
     components/editorarea.cpp \
     components/editor.cpp \
     components/debuginfoarea.cpp \
-    components/runoutputarea.cpp
+    components/runoutputarea.cpp \
+    components/welcomepage.cpp \
+    components/actionbutton.cpp
 
 HEADERS  += mainwindow.h \
     features/config.h \
@@ -38,4 +40,6 @@ HEADERS  += mainwindow.h \
     components/editorarea.h \
     components/editor.h \
     components/debuginfoarea.h \
-    components/runoutputarea.h
+    components/runoutputarea.h \
+    components/welcomepage.h \
+    components/actionbutton.h

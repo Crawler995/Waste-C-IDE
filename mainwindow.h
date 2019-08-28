@@ -25,6 +25,8 @@ private:
     void createWorkArea();
     void initStyle();
 
+    void connectSignalAndSlot();
+
     QMenuBar *mainMenuBar;
 
     QMenu *fileMenu;
@@ -43,6 +45,9 @@ private:
     QLabel *cursorPositionLabel, *totalLineNumLabel;
 
     WorkArea *workArea;
+
+private slots:
+
 };
 
 #endif // MAINWINDOW_H

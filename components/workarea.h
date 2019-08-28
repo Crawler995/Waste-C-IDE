@@ -15,6 +15,8 @@ class WorkArea : public QSplitter
 public:
     explicit WorkArea(QWidget *parent = 0);
 
+    EditorArea *getEditorArea() const;
+
 private:
     void initStyle();
     void setVStretchFactor(QWidget *widget, int factor);

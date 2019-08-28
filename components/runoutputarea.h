@@ -5,6 +5,9 @@
 #include <QLabel>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+
+#include "actionbutton.h"
 
 class RunOutputArea : public QWidget
 {
@@ -13,8 +16,13 @@ public:
     explicit RunOutputArea(QWidget *parent = 0);
 
 private:
+    QWidget *titleWidget;
     QLabel *areaTitleLabel;
+    ActionButton *compileButton, *runButton, *compileRunButton;
+
     QTextEdit *textEdit;
+
+    QHBoxLayout *titleLayout;
     QVBoxLayout *layout;
 };
 

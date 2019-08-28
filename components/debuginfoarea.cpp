@@ -8,7 +8,7 @@ DebugInfoArea::DebugInfoArea(QWidget *parent) : QWidget(parent)
     areaTitleLabel = new QLabel(tr("调试"), this);
     areaTitleLabel->setStyleSheet("color: " + ColorBoard::lightGray + ";"
                                   "background: " + ColorBoard::black2 + ";"
-                                  "padding: 8px 0px 8px 0px;");
+                                  "font-size: 16px;");
 
     layout->addWidget(areaTitleLabel);
     layout->addStretch();
