@@ -82,6 +82,16 @@ void MainWindow::initStyle()
 
         "QStatusBar{background-color: " + ColorBoard::blue + ";}"
         "QStatusBar::item{border: none; padding: 0px;}"
+
+        "QScrollBar:vertical{background:transparent; width: 24px;}"
+        "QScrollBar::handle:vertical{background:" + ColorBoard::lightGray + ";"
+        "border:2px solid transparent;"
+        "border-radius:4px;}"
+        "QScrollBar::handle:hover{background:" + ColorBoard::blue + ";}"
+        "QScrollBar::sub-line:vertical{background:transparent;}"
+        "QScrollBar::add-line:vertical{background:transparent;}"
+        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {"
+        "background: none;}"
     );
 
     cursorPositionLabel->setStyleSheet("color: " + ColorBoard::white + "; padding-left: 6px; font-size: 14px;");
@@ -111,8 +121,8 @@ void MainWindow::connectSignalAndSlot()
     });
     connect(compileAction, &QAction::triggered,
             this, [=]() {
+        workArea->getRunOutputArea()->getTextEdit()->clear();
         workArea->getEditorArea()->compileCurFile();
     });
-
 }
 

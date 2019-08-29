@@ -42,10 +42,17 @@ RunOutputArea::RunOutputArea(QWidget *parent) : QWidget(parent)
 
 void RunOutputArea::outputInfo(const QString &info)
 {
-    textEdit->append(info);
+    textEdit->moveCursor(QTextCursor::End);
+    textEdit->insertPlainText(info);
 }
 
 void RunOutputArea::outputError(const QString &error)
 {
-    textEdit->append(error);
+    textEdit->moveCursor(QTextCursor::End);
+    textEdit->insertHtml(tr("<font color=\"#FF0000\">%1</font>").arg(QString(error).replace("\r\n", "<br>")));
+}
+
+QTextEdit *RunOutputArea::getTextEdit() const
+{
+    return textEdit;
 }

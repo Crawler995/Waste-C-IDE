@@ -15,6 +15,8 @@ EditorArea::EditorArea(QWidget *parent) : QTabWidget(parent)
     WelcomePage *page = new WelcomePage(this);
     this->insertTab(0, page, "欢迎");
 
+    filePath = "";
+
     setTabsClosable(true);
     setMovable(true);
 
@@ -68,9 +70,11 @@ void EditorArea::saveCurEditorToFile()
         return;
     }
 
-    filePath = QFileDialog::getSaveFileName(this, tr("保存C语言源文件"),
-                                                    "untitled.c",
-                                                    "C Source files (*.c)");
+    if(filePath == "") {
+        filePath = QFileDialog::getSaveFileName(this, tr("保存C语言源文件"),
+                                                        "untitled.c",
+                                                        "C Source files (*.c)");
+    }
 
     QFile file(filePath);
     if(file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -103,5 +107,9 @@ void EditorArea::compileCurFile()
 
         process->close();
     });
-
+    connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
+        emit createOutputInfo(exitStatus == QProcess::NormalExit ? "终端任务顺利完成。"
+                                                                 : "终端任务异常退出。");
+    });
 }
