@@ -115,6 +115,10 @@ void MainWindow::connectSignalAndSlot()
             this, [=]() {
         workArea->getEditorArea()->createEditor();
     });
+    connect(openFileAction, &QAction::triggered,
+            this, [=]() {
+        workArea->getEditorArea()->openFile();
+    });
     connect(saveFileAction, &QAction::triggered,
             this, [=]() {
         workArea->getEditorArea()->saveCurEditorToFile();

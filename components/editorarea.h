@@ -17,6 +17,7 @@ public:
     void createEditor();
     void saveCurEditorToFile();
     void compileCurFile();
+    void openFile();
 
 private:
     void initStyle();

@@ -113,3 +113,18 @@ void EditorArea::compileCurFile()
                                                                  : "终端任务异常退出。");
     });
 }
+
+void EditorArea::openFile()
+{
+    filePath = QFileDialog::getOpenFileName(this, tr("打开C语言源文件"),
+                                                    "/",
+                                                    "C Source files (*.c)");
+
+    QFile file(filePath);
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        createEditor();
+        this->setTabText(this->currentIndex(), QFileInfo(filePath).fileName());
+        getCurEditor()->setText(QString::fromUtf8(file.readAll()));
+    }
+    file.close();
+}
