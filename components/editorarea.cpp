@@ -7,6 +7,8 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
+#include <QDir>
+#include <QProcess>
 
 EditorArea::EditorArea(QWidget *parent) : QTabWidget(parent)
 {
@@ -66,9 +68,10 @@ void EditorArea::saveCurEditorToFile()
         return;
     }
 
-    QString filePath = QFileDialog::getSaveFileName(this, tr("保存C语言源文件"),
+    filePath = QFileDialog::getSaveFileName(this, tr("保存C语言源文件"),
                                                     "untitled.c",
                                                     "C Source files (*.c)");
+
     QFile file(filePath);
     if(file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream s(&file);
@@ -77,4 +80,28 @@ void EditorArea::saveCurEditorToFile()
     file.close();
 
     this->setTabText(this->currentIndex(), QFileInfo(filePath).fileName());
+}
+
+void EditorArea::compileCurFile()
+{
+    QProcess *process = new QProcess(this);
+    QString exeFilePath = QString(filePath).replace(".c", ".exe");
+
+    QString cmd = QDir::toNativeSeparators(tr("gcc %1 -o %2\n").arg(filePath).arg(exeFilePath));
+
+    process->start(cmd);
+
+    emit createOutputInfo("> " + cmd);
+
+    connect(process, &QProcess::readyReadStandardOutput, this, [=]() {
+        emit createOutputInfo(QString::fromUtf8(process->readAllStandardOutput()));
+
+        process->close();
+    });
+    connect(process, &QProcess::readyReadStandardError, this, [=]() {
+        emit createOutputError(QString::fromUtf8(process->readAllStandardError()));
+
+        process->close();
+    });
+
 }

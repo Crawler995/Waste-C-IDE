@@ -17,6 +17,8 @@ public:
 
     EditorArea *getEditorArea() const;
 
+    RunOutputArea *getRunOutputArea() const;
+
 private:
     void initStyle();
     void setVStretchFactor(QWidget *widget, int factor);

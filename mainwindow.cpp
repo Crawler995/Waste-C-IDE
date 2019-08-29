@@ -96,6 +96,11 @@ void MainWindow::connectSignalAndSlot()
         totalLineNumLabel->setText(tr("共%1行").arg(totalRowNum));
     });
 
+    connect(workArea->getEditorArea(), &EditorArea::createOutputInfo,
+            workArea->getRunOutputArea(), &RunOutputArea::outputInfo);
+    connect(workArea->getEditorArea(), &EditorArea::createOutputError,
+            workArea->getRunOutputArea(), &RunOutputArea::outputError);
+
     connect(newFileAction, &QAction::triggered,
             this, [=]() {
         workArea->getEditorArea()->createEditor();
@@ -104,5 +109,10 @@ void MainWindow::connectSignalAndSlot()
             this, [=]() {
         workArea->getEditorArea()->saveCurEditorToFile();
     });
+    connect(compileAction, &QAction::triggered,
+            this, [=]() {
+        workArea->getEditorArea()->compileCurFile();
+    });
+
 }
 

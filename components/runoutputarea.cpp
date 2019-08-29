@@ -1,6 +1,8 @@
 #include "runoutputarea.h"
 #include "features/colorboard.h"
 
+#include <QDebug>
+
 RunOutputArea::RunOutputArea(QWidget *parent) : QWidget(parent)
 {
     titleWidget = new QWidget(this);
@@ -32,7 +34,18 @@ RunOutputArea::RunOutputArea(QWidget *parent) : QWidget(parent)
                                   "font-size: 16px;");
     textEdit->setStyleSheet("border: none;"
                             "background: " + ColorBoard::black3 + ";"
-                            "color: " + ColorBoard::lightGray + ";");
+                            "color: " + ColorBoard::lightGray + ";"
+                            "padding-left: 10px;");
     textEdit->setReadOnly(true);
     setLayout(layout);
+}
+
+void RunOutputArea::outputInfo(const QString &info)
+{
+    textEdit->append(info);
+}
+
+void RunOutputArea::outputError(const QString &error)
+{
+    textEdit->append(error);
 }

@@ -57,6 +57,11 @@ void WorkArea::setHStretchFactor(QWidget *widget, int factor)
     widget->setSizePolicy(policy);
 }
 
+RunOutputArea *WorkArea::getRunOutputArea() const
+{
+    return runOutputArea;
+}
+
 EditorArea *WorkArea::getEditorArea() const
 {
     return editorArea;

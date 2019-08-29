@@ -15,6 +15,10 @@ class RunOutputArea : public QWidget
 public:
     explicit RunOutputArea(QWidget *parent = 0);
 
+public slots:
+    void outputInfo(const QString &info);
+    void outputError(const QString &error);
+
 private:
     QWidget *titleWidget;
     QLabel *areaTitleLabel;
