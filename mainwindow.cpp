@@ -34,6 +34,7 @@ void MainWindow::createMenu() {
     newFileAction = fileMenu->addAction(tr("新建C语言源文件"));
     openFileAction = fileMenu->addAction(tr("打开C语言源文件"));
     saveFileAction = fileMenu->addAction(tr("保存"));
+    saveFileAction->setShortcut(QKeySequence(QLatin1String("Ctrl+S")));
 
     editMenu = mainMenuBar->addMenu(tr("编辑"));
     findAction = editMenu->addAction(tr("查找"));
@@ -127,6 +128,21 @@ void MainWindow::connectSignalAndSlot()
             this, [=]() {
         workArea->getRunOutputArea()->getTextEdit()->clear();
         workArea->getEditorArea()->compileCurFile();
+    });
+    connect(runAction, &QAction::triggered,
+            this, [=]() {
+        workArea->getRunOutputArea()->getTextEdit()->clear();
+        workArea->getEditorArea()->runCurFile();
+    });
+    connect(workArea->getRunOutputArea()->getCompileButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getRunOutputArea()->getTextEdit()->clear();
+        workArea->getEditorArea()->compileCurFile();
+    });
+    connect(workArea->getRunOutputArea()->getRunButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getRunOutputArea()->getTextEdit()->clear();
+        workArea->getEditorArea()->runCurFile();
     });
 }
 

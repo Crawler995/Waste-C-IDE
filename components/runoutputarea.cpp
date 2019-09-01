@@ -52,6 +52,36 @@ void RunOutputArea::outputError(const QString &error)
     textEdit->insertHtml(tr("<font color=\"#FF0000\">%1</font>").arg(QString(error).replace("\r\n", "<br>")));
 }
 
+ActionButton *RunOutputArea::getCompileRunButton() const
+{
+    return compileRunButton;
+}
+
+void RunOutputArea::setCompileRunButton(ActionButton *value)
+{
+    compileRunButton = value;
+}
+
+ActionButton *RunOutputArea::getRunButton() const
+{
+    return runButton;
+}
+
+void RunOutputArea::setRunButton(ActionButton *value)
+{
+    runButton = value;
+}
+
+ActionButton *RunOutputArea::getCompileButton() const
+{
+    return compileButton;
+}
+
+void RunOutputArea::setCompileButton(ActionButton *value)
+{
+    compileButton = value;
+}
+
 QTextEdit *RunOutputArea::getTextEdit() const
 {
     return textEdit;

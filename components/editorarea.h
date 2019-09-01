@@ -17,6 +17,7 @@ public:
     void createEditor();
     void saveCurEditorToFile();
     void compileCurFile();
+    void runCurFile();
     void openFile();
 
 private:
@@ -24,7 +25,6 @@ private:
     QString getCurEditorText();
 
     QVector<Editor*> editors;
-    QString filePath;
 
 signals:
     void cursorPositionChangedWithPos(int row, int col, int totalRowNum);

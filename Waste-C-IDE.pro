@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     components/debuginfoarea.cpp \
     components/runoutputarea.cpp \
     components/welcomepage.cpp \
-    components/actionbutton.cpp
+    components/actionbutton.cpp \
+    features/cpphighlighter.cpp
 
 HEADERS  += mainwindow.h \
     features/config.h \
@@ -42,4 +43,5 @@ HEADERS  += mainwindow.h \
     components/debuginfoarea.h \
     components/runoutputarea.h \
     components/welcomepage.h \
-    components/actionbutton.h
+    components/actionbutton.h \
+    features/cpphighlighter.h

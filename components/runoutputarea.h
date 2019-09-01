@@ -17,6 +17,15 @@ public:
 
     QTextEdit *getTextEdit() const;
 
+    ActionButton *getCompileButton() const;
+    void setCompileButton(ActionButton *value);
+
+    ActionButton *getRunButton() const;
+    void setRunButton(ActionButton *value);
+
+    ActionButton *getCompileRunButton() const;
+    void setCompileRunButton(ActionButton *value);
+
 public slots:
     void outputInfo(const QString &info);
     void outputError(const QString &error);
