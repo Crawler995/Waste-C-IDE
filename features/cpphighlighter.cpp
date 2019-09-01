@@ -1,11 +1,12 @@
   #include "CPPHighLighter.h"
+#include "colorboard.h"
 
   CPPHighLighter::CPPHighLighter(QTextDocument *parent)
       : QSyntaxHighlighter(parent)
   {
       HighlightingRule rule;
 
-      keywordFormat.setForeground(Qt::darkYellow);
+      keywordFormat.setForeground(QBrush(QColor(ColorBoard::keyWordRed)));
       keywordFormat.setFontWeight(QFont::Bold);
       QStringList keywordPatterns;
       keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
@@ -17,7 +18,9 @@
                       << "\\bslots\\b" << "\\bstatic\\b" << "\\bstruct\\b"
                       << "\\btemplate\\b" << "\\btypedef\\b" << "\\btypename\\b"
                       << "\\bunion\\b" << "\\bunsigned\\b" << "\\bvirtual\\b"
-                      << "\\bvoid\\b" << "\\bvolatile\\b";
+                      << "\\bvoid\\b" << "\\bvolatile\\b" << "\\include\\b"
+                      << "\\bifdef\\b" << "\\bdefine\\b" << "\\bendif\\b"
+                      << "\\bif\\b" << "\\belse\\b" << "\\breturn\\b" << "#";
       foreach (const QString &pattern, keywordPatterns) {
           rule.pattern = QRegExp(pattern);
           rule.format = keywordFormat;
@@ -25,8 +28,9 @@
       }
 
       classFormat.setFontWeight(QFont::Bold);
-      classFormat.setForeground(Qt::darkMagenta);
-      rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
+      classFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
+      //rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
+      rule.pattern = QRegExp("#\s+include\s+<.+>");
       rule.format = classFormat;
       highlightingRules.append(rule);
 
@@ -37,13 +41,13 @@
 
       multiLineCommentFormat.setForeground(Qt::lightGray);
 
-      quotationFormat.setForeground(Qt::darkGreen);
+      quotationFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
       rule.pattern = QRegExp("\".*\"");
       rule.format = quotationFormat;
       highlightingRules.append(rule);
 
       functionFormat.setFontItalic(true);
-      functionFormat.setForeground(Qt::darkCyan);
+      functionFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
       rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
       rule.format = functionFormat;
       highlightingRules.append(rule);

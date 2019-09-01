@@ -15,7 +15,9 @@ namespace ColorBoard {
     const QString lightGray = "#b0b0b0";
     const QString white = "#ffffff";
 
-    const QString normalTextLightYellow = "#d6ce3e";
+    const QString normalTextLightYellow = "#fcf9ba";
+    const QString keyWordRed = "#f25c7f";
+    const QString headFileLightBlue = "#76f2ee";
 }
 
 #endif // COLORBOARD_H
