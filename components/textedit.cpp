@@ -1,14 +1,64 @@
 #include "textedit.h"
 #include <QDebug>
 #include <QKeyEvent>
+#include <QAbstractItemView>
+#include <QScrollBar>
 
 TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent)
 {
+    highLighter = new CPPHighLighter(this->document());
+
+    completer = new CCompleter(this);
+    completer->setWidget(this);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    connect(completer, static_cast<void(QCompleter::*)(const QString &)>(&QCompleter::activated),
+            this, [=](const QString &completion) {
+        QTextCursor tc = textCursor();
+        int extra = completion.length() - completer->completionPrefix().length();
+        tc.movePosition(QTextCursor::Left);
+        tc.movePosition(QTextCursor::EndOfWord);
+        tc.insertText(completion.right(extra));
+        setTextCursor(tc);
+
+        completer->popup()->hide();
+    });
+
+    connect(this, &QTextEdit::textChanged, this,
+            [=]() {
+        if(this->getPreWord() == "") {
+            completer->popup()->hide();
+            return;
+        }
+        completer->setCompletionPrefix(this->getPreWord());
+        completer->popup()->setCurrentIndex(completer->completionModel()->index(0, 0));
+
+        QRect cr = cursorRect();
+        cr.setWidth(completer->popup()->sizeHintForColumn(0)
+               + completer->popup()->verticalScrollBar()->sizeHint().width());
+        completer->complete(cr);
+    });
+}
+
+void TextEdit::setFont(const QFont &font)
+{
+    QTextEdit::setFont(font);
+    QFontMetrics metrics(this->font());
+    this->setTabStopWidth(4 * metrics.width(' '));
+}
+
+QString TextEdit::getPreWord()
+{
+    QTextCursor initCursor = this->textCursor();
+
+    this->moveCursor(QTextCursor::StartOfWord, QTextCursor::KeepAnchor);
+    QString res = this->textCursor().selectedText();
+    this->setTextCursor(initCursor);
+    return res;
 }
 
 void TextEdit::keyPressEvent(QKeyEvent *event)
 {
-    QTextEdit::keyPressEvent(event);
+    bool isIgnore = false;
 
     if(event->key() == '[') {
         this->insertPlainText("]");
@@ -29,6 +79,18 @@ void TextEdit::keyPressEvent(QKeyEvent *event)
     else if(event->key() == '{') {
         this->insertPlainText("}");
         this->moveCursor(QTextCursor::PreviousCharacter);
+    }
+
+
+    else if(event->key() == Qt::Key_Return) {
+        if(completer && completer->popup()->isVisible()) {
+            event->ignore();
+            isIgnore = true;
+        }
+    }
+
+    if(!isIgnore) {
+        QTextEdit::keyPressEvent(event);
     }
 }
 
@@ -53,6 +115,10 @@ bool TextEdit::event(QEvent *e)
                 }
             }
             else {
+                if(completer && completer->popup()->isVisible()) {
+                    QTextEdit::event(e);
+                    return true;
+                }
                 int curLineStartTabNum = getCurLineStartTabNum();
                 this->insertPlainText("\r\n");
                 for(int i = 0; i < curLineStartTabNum; i++) {

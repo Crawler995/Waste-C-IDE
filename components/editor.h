@@ -32,9 +32,6 @@ private:
     QString fileName;
     bool isSave;
     bool isAlreadyCompile;
-
-    CPPHighLighter *highLighter;
-    CCompleter *completer;
 };
 
 #endif // EDITOR_H

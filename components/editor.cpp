@@ -21,20 +21,12 @@ Editor::Editor(QWidget *parent) : QWidget(parent)
     fileName = "";
     isAlreadyCompile = false;
 
-
     connect(textEdit, &QTextEdit::textChanged,
             this, [=] {
         isSave = false;
     });
 
     isSave = true;
-
-    highLighter = new CPPHighLighter(textEdit->document());
-
-    QFontMetrics metrics(textEdit->font());
-    textEdit->setTabStopWidth(4 * metrics.width(' '));
-
-    completer = new CCompleter(textEdit);
 }
 
 TextEdit *Editor::getTextEdit() const
