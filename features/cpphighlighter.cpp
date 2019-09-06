@@ -20,7 +20,8 @@
                       << "\\bunion\\b" << "\\bunsigned\\b" << "\\bvirtual\\b"
                       << "\\bvoid\\b" << "\\bvolatile\\b" << "\\include\\b"
                       << "\\bifdef\\b" << "\\bdefine\\b" << "\\bendif\\b"
-                      << "\\bif\\b" << "\\belse\\b" << "\\breturn\\b" << "#";
+                      << "\\bif\\b" << "\\belse\\b" << "\\breturn\\b" << "#"
+                      << "\\bfloat\\b";
       foreach (const QString &pattern, keywordPatterns) {
           rule.pattern = QRegExp(pattern);
           rule.format = keywordFormat;
@@ -41,9 +42,14 @@
 
       multiLineCommentFormat.setForeground(Qt::lightGray);
 
-      quotationFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
+      doubleQuotationFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
       rule.pattern = QRegExp("\".*\"");
-      rule.format = quotationFormat;
+      rule.format = doubleQuotationFormat;
+      highlightingRules.append(rule);
+
+      singleQuotationFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
+      rule.pattern = QRegExp("'.*'");
+      rule.format = singleQuotationFormat;
       highlightingRules.append(rule);
 
       functionFormat.setFontItalic(true);

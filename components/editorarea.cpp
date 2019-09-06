@@ -88,6 +88,11 @@ void EditorArea::saveCurEditorToFile()
     editor->setIsSave(true);
 }
 
+void EditorArea::findWord()
+{
+
+}
+
 void EditorArea::compileCurFile()
 {
     Editor *editor = editors[currentIndex()];
@@ -158,7 +163,9 @@ void EditorArea::openFile()
     QString fileName = QFileDialog::getOpenFileName(this, tr("打开C语言源文件"),
                                                     "/",
                                                     "C Source files (*.c)");
-
+    if(fileName == "") {
+        return;
+    }
     QFile file(fileName);
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         createEditor();

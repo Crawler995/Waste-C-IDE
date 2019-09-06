@@ -16,6 +16,9 @@ public:
     QTextEdit* getCurEditor();
     void createEditor();
     void saveCurEditorToFile();
+
+    void findWord();
+
     void compileCurFile();
     void runCurFile();
     void openFile();

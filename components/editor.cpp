@@ -12,7 +12,7 @@ Editor::Editor(QWidget *parent) : QWidget(parent)
                   "padding-left: 10px;");
 
     layout = new QHBoxLayout(this);
-    textEdit = new QTextEdit(this);
+    textEdit = new TextEdit(this);
     textEdit->setFont(QFont("Consolas", 14));
     layout->addWidget(textEdit);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -33,9 +33,11 @@ Editor::Editor(QWidget *parent) : QWidget(parent)
 
     QFontMetrics metrics(textEdit->font());
     textEdit->setTabStopWidth(4 * metrics.width(' '));
+
+    completer = new CCompleter(textEdit);
 }
 
-QTextEdit *Editor::getTextEdit() const
+TextEdit *Editor::getTextEdit() const
 {
     return textEdit;
 }

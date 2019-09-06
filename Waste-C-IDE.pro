@@ -32,7 +32,9 @@ SOURCES += main.cpp\
     components/runoutputarea.cpp \
     components/welcomepage.cpp \
     components/actionbutton.cpp \
-    features/cpphighlighter.cpp
+    features/cpphighlighter.cpp \
+    features/ccompleter.cpp \
+    components/textedit.cpp
 
 HEADERS  += mainwindow.h \
     features/config.h \
@@ -44,4 +46,6 @@ HEADERS  += mainwindow.h \
     components/runoutputarea.h \
     components/welcomepage.h \
     components/actionbutton.h \
-    features/cpphighlighter.h
+    features/cpphighlighter.h \
+    features/ccompleter.h \
+    components/textedit.h

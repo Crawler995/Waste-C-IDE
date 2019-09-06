@@ -5,6 +5,8 @@
 #include <QTextEdit>
 #include <QHBoxLayout>
 #include "../features/cpphighlighter.h"
+#include "../features/ccompleter.h"
+#include "textedit.h"
 
 class Editor : public QWidget
 {
@@ -12,7 +14,7 @@ class Editor : public QWidget
 public:
     explicit Editor(QWidget *parent = 0);
 
-    QTextEdit *getTextEdit() const;
+    TextEdit *getTextEdit() const;
 
     QString getFileName() const;
     void setFileName(const QString &value);
@@ -24,7 +26,7 @@ public:
     void setIsAlreadyCompile(bool value);
 
 private:
-    QTextEdit *textEdit;
+    TextEdit *textEdit;
     QHBoxLayout *layout;
 
     QString fileName;
@@ -32,6 +34,7 @@ private:
     bool isAlreadyCompile;
 
     CPPHighLighter *highLighter;
+    CCompleter *completer;
 };
 
 #endif // EDITOR_H

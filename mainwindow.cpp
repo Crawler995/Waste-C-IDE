@@ -124,6 +124,12 @@ void MainWindow::connectSignalAndSlot()
             this, [=]() {
         workArea->getEditorArea()->saveCurEditorToFile();
     });
+
+    connect(findAction, &QAction::triggered,
+            this, [=]() {
+        workArea->getEditorArea()->findWord();
+    });
+
     connect(compileAction, &QAction::triggered,
             this, [=]() {
         workArea->getRunOutputArea()->getTextEdit()->clear();
