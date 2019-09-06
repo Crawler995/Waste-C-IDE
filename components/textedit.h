@@ -16,7 +16,6 @@ protected:
 
 private:
     int getCurLineStartTabNum();
-    bool isCursorWrappedInBracket();
     QString getStringAroundCursor(Dir dir, int length);
 };
 

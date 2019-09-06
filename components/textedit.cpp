@@ -61,6 +61,61 @@ bool TextEdit::event(QEvent *e)
             }
             return true;
         }
+
+        else if(event->key() == ')') {
+            QChar nextChar = getStringAroundCursor(RIGHT, 1)[0];
+            if(nextChar == ')') {
+                this->moveCursor(QTextCursor::NextCharacter);
+            }
+            else {
+                QTextEdit::event(e);
+            }
+            return true;
+        }
+
+        else if(event->key() == ']') {
+            QChar nextChar = getStringAroundCursor(RIGHT, 1)[0];
+            if(nextChar == ']') {
+                this->moveCursor(QTextCursor::NextCharacter);
+            }
+            else {
+                QTextEdit::event(e);
+            }
+            return true;
+        }
+
+        else if(event->key() == '}') {
+            QChar nextChar = getStringAroundCursor(RIGHT, 1)[0];
+            if(nextChar == '}') {
+                this->moveCursor(QTextCursor::NextCharacter);
+            }
+            else {
+                QTextEdit::event(e);
+            }
+            return true;
+        }
+
+        else if(event->key() == '"') {
+            QChar nextChar = getStringAroundCursor(RIGHT, 1)[0];
+            if(nextChar == '"') {
+                this->moveCursor(QTextCursor::NextCharacter);
+            }
+            else {
+                QTextEdit::event(e);
+            }
+            return true;
+        }
+
+        else if(event->key() == '\'') {
+            QChar nextChar = getStringAroundCursor(RIGHT, 1)[0];
+            if(nextChar == '\'') {
+                this->moveCursor(QTextCursor::NextCharacter);
+            }
+            else {
+                QTextEdit::event(e);
+            }
+            return true;
+        }
     }
     QTextEdit::event(e);
     return true;
@@ -82,19 +137,7 @@ int TextEdit::getCurLineStartTabNum()
     }
 
     this->setTextCursor(initCursor);
-    qDebug() << res;
     return res;
-}
-
-bool TextEdit::isCursorWrappedInBracket()
-{
-    QChar left = getStringAroundCursor(LEFT, 1)[0];
-    QChar right = getStringAroundCursor(RIGHT, 2)[0];
-    //qDebug() << "left" << left << " " << right;
-
-    return (left == '(' && right == ')') ||
-           (left == '[' && right == ']') ||
-           (left == '{' && right == '}');
 }
 
 QString TextEdit::getStringAroundCursor(Dir dir, int length)
@@ -115,6 +158,5 @@ QString TextEdit::getStringAroundCursor(Dir dir, int length)
                          QTextCursor::KeepAnchor);
     }
 
-    qDebug() << "around: " << res;
     return res;
 }

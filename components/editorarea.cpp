@@ -71,9 +71,13 @@ void EditorArea::saveCurEditorToFile()
     Editor *editor = editors[currentIndex()];
 
     if(editor->getFileName() == "") {
-        editor->setFileName(QFileDialog::getSaveFileName(this, tr("保存C语言源文件"),
-                                                        "untitled.c",
-                                                        "C Source files (*.c)"));
+        QString saveFileName = QFileDialog::getSaveFileName(this, tr("保存C语言源文件"),
+                                                            "untitled.c",
+                                                            "C Source files (*.c)");
+        if(saveFileName == "") {
+            return;
+        }
+        editor->setFileName(saveFileName);
     }
 
     QFile file(editor->getFileName());
