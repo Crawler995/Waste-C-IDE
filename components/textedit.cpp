@@ -39,8 +39,18 @@ bool TextEdit::event(QEvent *e)
         if(event->key() == Qt::Key_Return) {
             QChar preChar = getStringAroundCursor(LEFT, 1)[0];
             if(preChar == '(' || preChar == '[' || preChar == '{') {
-                this->insertPlainText("\r\n\t\r\n");
-                this->moveCursor(QTextCursor::PreviousCharacter);
+                int curLineStartTabNum = getCurLineStartTabNum();
+                this->insertPlainText("\r\n");
+                for(int i = 0; i <= curLineStartTabNum; i++) {
+                    this->insertPlainText("\t");
+                }
+                this->insertPlainText("\r\n");
+                for(int i = 0; i < curLineStartTabNum; i++) {
+                    this->insertPlainText("\t");
+                }
+                for(int i = 0; i <= curLineStartTabNum; i++) {
+                    this->moveCursor(QTextCursor::PreviousCharacter);
+                }
             }
             else {
                 int curLineStartTabNum = getCurLineStartTabNum();
