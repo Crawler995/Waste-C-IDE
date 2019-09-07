@@ -4,6 +4,8 @@
 #include <QFont>
 #include <QDebug>
 #include <QFontMetrics>
+#include <QTextCharFormat>
+#include <QRegExp>
 
 Editor::Editor(QWidget *parent) : QWidget(parent)
 {
@@ -62,4 +64,129 @@ bool Editor::getIsAlreadyCompile() const
 void Editor::setIsAlreadyCompile(bool value)
 {
     isAlreadyCompile = value;
+}
+
+void Editor::findWordAndHighLight(const QString &word, bool isRegex, bool isCaseSensitive)
+{
+    if(!indexes.empty()) {
+        clearHighLightOfFoundWord();
+    }
+
+    QTextCharFormat format;
+    format.setBackground(QColor(255, 255, 255, 60));
+    QTextCursor cursor = this->textEdit->textCursor(), initCursor = cursor;
+
+    if(isRegex) {
+        QRegExp regx(word);
+        regx.setCaseSensitivity(Qt::CaseSensitivity(isCaseSensitive));
+        int pos = 0;
+        const QString textEditText = this->textEdit->toPlainText();
+        int index = regx.indexIn(textEditText, pos);
+
+        while(index != -1) {
+            indexes.append(index);
+
+            cursor.setPosition(index);
+            for(int i = 0; i < word.size(); i++) {
+                cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+            }
+            cursor.mergeCharFormat(format);
+
+            pos = index + regx.matchedLength();
+            index = regx.indexIn(textEditText, pos);
+        }
+    }
+    else {
+        int pos = 0;
+        const QString textEditText = this->textEdit->toPlainText();
+        int index = textEditText.indexOf(word, pos, Qt::CaseSensitivity(isCaseSensitive));
+
+        while(index != -1) {
+            indexes.append(index);
+
+            cursor.setPosition(index);
+            for(int i = 0; i < word.size(); i++) {
+                cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+            }
+            cursor.mergeCharFormat(format);
+
+            pos = index + word.size();
+            index = textEditText.indexOf(word, pos, Qt::CaseSensitivity(isCaseSensitive));
+        }
+    }
+
+    this->textEdit->setTextCursor(initCursor);
+}
+
+void Editor::replaceWordAndHighLight(const QString &word, const QString &target, bool isRegex, bool isCaseSensitive)
+{
+    if(!indexes.empty()) {
+        clearHighLightOfFoundWord();
+    }
+
+    QTextCharFormat format;
+    format.setBackground(QColor(255, 255, 255, 60));
+    QTextCursor cursor = this->textEdit->textCursor(), initCursor = cursor;
+
+    if(isRegex) {
+        QRegExp regx(word);
+        regx.setCaseSensitivity(Qt::CaseSensitivity(isCaseSensitive));
+        int pos = 0;
+        QString textEditText = this->textEdit->toPlainText();
+        int index = regx.indexIn(textEditText, pos);
+
+        while(index != -1) {
+            indexes.append(index);
+
+            cursor.setPosition(index);
+            for(int i = 0; i < word.size(); i++) {
+                cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+            }
+            cursor.removeSelectedText();
+            cursor.insertText(target, format);
+
+            pos = index + target.size();
+            textEditText = this->textEdit->toPlainText();
+
+            index = regx.indexIn(textEditText, pos);
+        }
+    }
+    else {
+        int pos = 0;
+        QString textEditText = this->textEdit->toPlainText();
+        int index = textEditText.indexOf(word, pos, Qt::CaseSensitivity(isCaseSensitive));
+
+        while(index != -1) {
+            indexes.append(index);
+
+            cursor.setPosition(index);
+            for(int i = 0; i < word.size(); i++) {
+                cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+            }
+            cursor.removeSelectedText();
+            cursor.insertText(target, format);
+
+            pos = index + target.size();
+            textEditText = this->textEdit->toPlainText();
+
+            index = textEditText.indexOf(word, pos, Qt::CaseSensitivity(isCaseSensitive));
+        }
+    }
+
+    this->textEdit->setTextCursor(initCursor);
+}
+
+void Editor::clearHighLightOfFoundWord()
+{
+    QTextCursor cursor = this->textEdit->textCursor(), initCursor = cursor;
+    QTextCharFormat format;
+    format.setBackground(QColor(0, 0, 0, 0));
+
+    cursor.movePosition(QTextCursor::Start);
+    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+    cursor.mergeCharFormat(format);
+
+    this->textEdit->setTextCursor(initCursor);
+
+    indexes.clear();
 }

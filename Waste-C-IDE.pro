@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     components/actionbutton.cpp \
     features/cpphighlighter.cpp \
     features/ccompleter.cpp \
-    components/textedit.cpp
+    components/textedit.cpp \
+    components/findorreplacedialog.cpp
 
 HEADERS  += mainwindow.h \
     features/config.h \
@@ -48,4 +49,5 @@ HEADERS  += mainwindow.h \
     components/actionbutton.h \
     features/cpphighlighter.h \
     features/ccompleter.h \
-    components/textedit.h
+    components/textedit.h \
+    components/findorreplacedialog.h

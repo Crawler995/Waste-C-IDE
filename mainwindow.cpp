@@ -37,8 +37,7 @@ void MainWindow::createMenu() {
     saveFileAction->setShortcut(QKeySequence(QLatin1String("Ctrl+S")));
 
     editMenu = mainMenuBar->addMenu(tr("编辑"));
-    findAction = editMenu->addAction(tr("查找"));
-    replaceAction = editMenu->addAction(tr("替换"));
+    findReplaceAction = editMenu->addAction(tr("查找/替换"));
 
     runMenu = mainMenuBar->addMenu(tr("运行"));
     compileAction = runMenu->addAction(tr("编译"));
@@ -125,7 +124,7 @@ void MainWindow::connectSignalAndSlot()
         workArea->getEditorArea()->saveCurEditorToFile();
     });
 
-    connect(findAction, &QAction::triggered,
+    connect(findReplaceAction, &QAction::triggered,
             this, [=]() {
         workArea->getEditorArea()->findWord();
     });

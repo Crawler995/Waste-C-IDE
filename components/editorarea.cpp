@@ -1,6 +1,7 @@
 #include "editorarea.h"
 #include "features/colorboard.h"
 #include "welcomepage.h"
+#include "findorreplacedialog.h"
 
 #include <QDebug>
 #include <QTextBlock>
@@ -94,7 +95,29 @@ void EditorArea::saveCurEditorToFile()
 
 void EditorArea::findWord()
 {
+    FindOrReplaceDialog *dialog = new FindOrReplaceDialog();
 
+    connect(dialog->getFindButton(), &QPushButton::clicked,
+            this, [=]() {
+        editors[this->currentIndex()]->findWordAndHighLight(dialog->getInputWordEdit()->text(),
+                                                            dialog->getIsRegexMatch(),
+                                                            dialog->getIsCaseSensitive());
+    });
+    connect(dialog->getReplaceButton(), &QPushButton::clicked,
+            this, [=]() {
+        editors[this->currentIndex()]->replaceWordAndHighLight(dialog->getInputWordEdit()->text(),
+                                                               dialog->getTargetWordEdit()->text(),
+                                                               dialog->getIsRegexMatch(),
+                                                               dialog->getIsCaseSensitive());
+    });
+
+    connect(dialog, &QWidget::destroyed,
+            this, [=]() {
+        editors[this->currentIndex()]->clearHighLightOfFoundWord();
+    });
+
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
 }
 
 void EditorArea::compileCurFile()

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTextEdit>
 #include <QHBoxLayout>
+#include <QVector>
 #include "../features/cpphighlighter.h"
 #include "../features/ccompleter.h"
 #include "textedit.h"
@@ -25,6 +26,10 @@ public:
     bool getIsAlreadyCompile() const;
     void setIsAlreadyCompile(bool value);
 
+    void findWordAndHighLight(const QString &word, bool isRegex, bool isCaseSensitive);
+    void replaceWordAndHighLight(const QString &word, const QString &target, bool isRegex, bool isCaseSensitive);
+    void clearHighLightOfFoundWord();
+
 private:
     TextEdit *textEdit;
     QHBoxLayout *layout;
@@ -32,6 +37,8 @@ private:
     QString fileName;
     bool isSave;
     bool isAlreadyCompile;
+
+    QVector<int> indexes;
 };
 
 #endif // EDITOR_H

@@ -33,7 +33,7 @@ private:
     QAction *newFileAction, *openFileAction, *saveFileAction;
 
     QMenu *editMenu;
-    QAction *findAction, *replaceAction;
+    QAction *findReplaceAction;
 
     QMenu *runMenu;
     QAction *compileAction, *runAction, *compileRunAction, *debugAction;
