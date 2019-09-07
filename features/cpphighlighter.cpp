@@ -7,7 +7,7 @@
       HighlightingRule rule;
 
       keywordFormat.setForeground(QBrush(QColor(ColorBoard::keyWordRed)));
-      keywordFormat.setFontWeight(QFont::Bold);
+      //keywordFormat.setFontWeight(QFont::Bold);
       QStringList keywordPatterns;
       keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
                       << "\\bdouble\\b" << "\\benum\\b" << "\\bexplicit\\b"
@@ -21,17 +21,17 @@
                       << "\\bvoid\\b" << "\\bvolatile\\b" << "\\include\\b"
                       << "\\bifdef\\b" << "\\bdefine\\b" << "\\bendif\\b"
                       << "\\bif\\b" << "\\belse\\b" << "\\breturn\\b" << "#"
-                      << "\\bfloat\\b";
+                      << "\\bfloat\\b" << "\\bpragma\\b";
       foreach (const QString &pattern, keywordPatterns) {
           rule.pattern = QRegExp(pattern);
           rule.format = keywordFormat;
           highlightingRules.append(rule);
       }
 
-      classFormat.setFontWeight(QFont::Bold);
-      classFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
+      //classFormat.setFontWeight(QFont::Bold);
+      classFormat.setForeground(QBrush(QColor(ColorBoard::stringDardRed)));
       //rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
-      rule.pattern = QRegExp("#\s+include\s+<.+>");
+      rule.pattern = QRegExp("<.+>");
       rule.format = classFormat;
       highlightingRules.append(rule);
 
@@ -42,17 +42,17 @@
 
       multiLineCommentFormat.setForeground(Qt::lightGray);
 
-      doubleQuotationFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
+      doubleQuotationFormat.setForeground(QBrush(QColor(ColorBoard::stringDardRed)));
       rule.pattern = QRegExp("\".*\"");
       rule.format = doubleQuotationFormat;
       highlightingRules.append(rule);
 
-      singleQuotationFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
+      singleQuotationFormat.setForeground(QBrush(QColor(ColorBoard::stringDardRed)));
       rule.pattern = QRegExp("'.*'");
       rule.format = singleQuotationFormat;
       highlightingRules.append(rule);
 
-      functionFormat.setFontItalic(true);
+      //functionFormat.setFontItalic(true);
       functionFormat.setForeground(QBrush(QColor(ColorBoard::headFileLightBlue)));
       rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
       rule.format = functionFormat;

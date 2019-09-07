@@ -1,4 +1,5 @@
 #include "textedit.h"
+#include "../features/colorboard.h"
 #include <QDebug>
 #include <QKeyEvent>
 #include <QAbstractItemView>
@@ -11,6 +12,17 @@ TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent)
     completer = new CCompleter(this);
     completer->setWidget(this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
+
+    completer->popup()->setStyleSheet("QAbstractItemView{background: " + ColorBoard::black1 + "; border:none;"
+                                      "color: " + ColorBoard::lightGray + ";}"
+                                      "QAbstractItemView::item {background: " + ColorBoard::black1 + ";}"
+                                      "QListView::item:selected{ background: " + ColorBoard::black2 + ";"
+                                      "color: " + ColorBoard::blue + ";}"
+                                      "QListView::item:selected:active{ background: " + ColorBoard::black2 + ";"
+                                      "color: " + ColorBoard::blue + ";}"
+                                      "QListView::item:selected:!active{ background: " + ColorBoard::black2 + ";"
+                                      "color: " + ColorBoard::blue + ";}");
+
     connect(completer, static_cast<void(QCompleter::*)(const QString &)>(&QCompleter::activated),
             this, [=](const QString &completion) {
         QTextCursor tc = textCursor();
@@ -44,6 +56,7 @@ void TextEdit::setFont(const QFont &font)
     QTextEdit::setFont(font);
     QFontMetrics metrics(this->font());
     this->setTabStopWidth(4 * metrics.width(' '));
+    completer->popup()->setFont(font);
 }
 
 QString TextEdit::getPreWord()
@@ -78,6 +91,10 @@ void TextEdit::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == '{') {
         this->insertPlainText("}");
+        this->moveCursor(QTextCursor::PreviousCharacter);
+    }
+    else if(event->key() == '<') {
+        this->insertPlainText(">");
         this->moveCursor(QTextCursor::PreviousCharacter);
     }
 
@@ -175,6 +192,17 @@ bool TextEdit::event(QEvent *e)
         else if(event->key() == '\'') {
             QChar nextChar = getStringAroundCursor(RIGHT, 1)[0];
             if(nextChar == '\'') {
+                this->moveCursor(QTextCursor::NextCharacter);
+            }
+            else {
+                QTextEdit::event(e);
+            }
+            return true;
+        }
+
+        else if(event->key() == '>') {
+            QChar nextChar = getStringAroundCursor(RIGHT, 1)[0];
+            if(nextChar == '>') {
                 this->moveCursor(QTextCursor::NextCharacter);
             }
             else {
