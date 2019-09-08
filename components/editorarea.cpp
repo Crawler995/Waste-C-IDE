@@ -72,6 +72,12 @@ void EditorArea::createEditor()
     });
 }
 
+void EditorArea::createEditorWithTemp()
+{
+    createEditor();
+    editors[this->currentIndex()]->getTextEdit()->insertPlainText("#include <stdio.h>");
+}
+
 void EditorArea::saveCurEditorToFile()
 {
     if(this->count() == 0 || qobject_cast<WelcomePage*>(this->currentWidget())) {
@@ -203,6 +209,43 @@ void EditorArea::runCurFile()
     connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
             this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
         emit createOutputInfo("\n终端任务结束。");
+    });
+}
+
+void EditorArea::compileRunCurFile()
+{
+    Editor *editor = editors[currentIndex()];
+
+    if(!editor->getIsSave()) {
+        emit createOutputInfo("文件未保存！");
+        return;
+    }
+
+    QProcess *process = new QProcess(this);
+    QString exeFilePath = QString(editor->getFileName()).replace(".c", ".exe");
+
+    QString cmd = QDir::toNativeSeparators(tr("gcc %1 -o %2\n").arg(editor->getFileName()).arg(exeFilePath));
+
+    process->start(cmd);
+
+    emit createOutputInfo("> " + cmd);
+    editor->setIsAlreadyCompile(true);
+
+    connect(process, &QProcess::readyReadStandardOutput, this, [=]() {
+        emit createOutputInfo(QString::fromUtf8(process->readAllStandardOutput()));
+
+        process->close();
+    });
+    connect(process, &QProcess::readyReadStandardError, this, [=]() {
+        emit createOutputError(QString::fromUtf8(process->readAllStandardError()));
+        editor->setIsAlreadyCompile(false);
+        process->close();
+    });
+    connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
+        emit createOutputInfo("\n终端任务结束。\n");
+
+        runCurFile();
     });
 }
 

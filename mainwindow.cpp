@@ -31,8 +31,12 @@ void MainWindow::createMenu() {
     mainMenuBar = this->menuBar();
 
     fileMenu = mainMenuBar->addMenu(tr("文件"));
-    newFileAction = fileMenu->addAction(tr("新建C语言源文件"));
+    newFileMenu = fileMenu->addMenu(tr("新建"));
+    newFileAction = newFileMenu->addAction(tr("新建空白C语言源文件"));
+    newFileAction->setShortcut(QKeySequence(QLatin1String("Ctrl+N")));
+    newFileWithTempAction = newFileMenu->addAction(tr("新建带main函数的C语言源文件"));
     openFileAction = fileMenu->addAction(tr("打开C语言源文件"));
+    openFileAction->setShortcut(QKeySequence(QLatin1String("Ctrl+O")));
     saveFileAction = fileMenu->addAction(tr("保存"));
     saveFileAction->setShortcut(QKeySequence(QLatin1String("Ctrl+S")));
 
@@ -43,6 +47,7 @@ void MainWindow::createMenu() {
     compileAction = runMenu->addAction(tr("编译"));
     runAction = runMenu->addAction(tr("运行"));
     compileRunAction = runMenu->addAction(tr("编译运行"));
+    compileRunAction->setShortcut(QKeySequence(QLatin1String("Ctrl+R")));
 
     settingMenu = mainMenuBar->addMenu(tr("设置"));
     editorSettingAction = settingMenu->addAction(tr("编辑器设置"));
@@ -115,6 +120,10 @@ void MainWindow::connectSignalAndSlot()
             this, [=]() {
         workArea->getEditorArea()->createEditor();
     });
+    connect(newFileWithTempAction, &QAction::triggered,
+            this, [=]() {
+        workArea->getEditorArea()->createEditorWithTemp();
+    });
     connect(openFileAction, &QAction::triggered,
             this, [=]() {
         workArea->getEditorArea()->openFile();
@@ -139,6 +148,11 @@ void MainWindow::connectSignalAndSlot()
         workArea->getRunOutputArea()->getTextEdit()->clear();
         workArea->getEditorArea()->runCurFile();
     });
+    connect(compileRunAction, &QAction::triggered,
+            this, [=]() {
+        workArea->getRunOutputArea()->getTextEdit()->clear();
+        workArea->getEditorArea()->compileRunCurFile();
+    });
     connect(workArea->getRunOutputArea()->getCompileButton(), &QPushButton::clicked,
             this, [=]() {
         workArea->getRunOutputArea()->getTextEdit()->clear();
@@ -148,6 +162,11 @@ void MainWindow::connectSignalAndSlot()
             this, [=]() {
         workArea->getRunOutputArea()->getTextEdit()->clear();
         workArea->getEditorArea()->runCurFile();
+    });
+    connect(workArea->getRunOutputArea()->getCompileRunButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getRunOutputArea()->getTextEdit()->clear();
+        workArea->getEditorArea()->compileRunCurFile();
     });
 
     connect(editorSettingAction, &QAction::triggered,

@@ -30,7 +30,8 @@ private:
     QMenuBar *mainMenuBar;
 
     QMenu *fileMenu;
-    QAction *newFileAction, *openFileAction, *saveFileAction;
+    QMenu *newFileMenu;
+    QAction *newFileAction, *newFileWithTempAction, *openFileAction, *saveFileAction;
 
     QMenu *editMenu;
     QAction *findReplaceAction;

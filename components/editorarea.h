@@ -15,12 +15,14 @@ public:
 
     QTextEdit* getCurEditor();
     void createEditor();
+    void createEditorWithTemp();
     void saveCurEditorToFile();
 
     void findWord();
 
     void compileCurFile();
     void runCurFile();
+    void compileRunCurFile();
     void openFile();
 
     void openSettingDialog();
