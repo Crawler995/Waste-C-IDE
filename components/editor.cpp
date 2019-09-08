@@ -78,6 +78,7 @@ void Editor::findWordAndHighLight(const QString &word, bool isRegex, bool isCase
 
     if(isRegex) {
         QRegExp regx(word);
+        regx.setMinimal(true);
         regx.setCaseSensitivity(Qt::CaseSensitivity(isCaseSensitive));
         int pos = 0;
         const QString textEditText = this->textEdit->toPlainText();
@@ -87,7 +88,7 @@ void Editor::findWordAndHighLight(const QString &word, bool isRegex, bool isCase
             indexes.append(index);
 
             cursor.setPosition(index);
-            for(int i = 0; i < word.size(); i++) {
+            for(int i = 0; i < regx.matchedLength(); i++) {
                 cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
             }
             cursor.mergeCharFormat(format);
@@ -130,6 +131,7 @@ void Editor::replaceWordAndHighLight(const QString &word, const QString &target,
 
     if(isRegex) {
         QRegExp regx(word);
+        regx.setMinimal(true);
         regx.setCaseSensitivity(Qt::CaseSensitivity(isCaseSensitive));
         int pos = 0;
         QString textEditText = this->textEdit->toPlainText();
@@ -139,13 +141,13 @@ void Editor::replaceWordAndHighLight(const QString &word, const QString &target,
             indexes.append(index);
 
             cursor.setPosition(index);
-            for(int i = 0; i < word.size(); i++) {
+            for(int i = 0; i < regx.matchedLength(); i++) {
                 cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
             }
             cursor.removeSelectedText();
             cursor.insertText(target, format);
 
-            pos = index + target.size();
+            pos = index + regx.matchedLength();
             textEditText = this->textEdit->toPlainText();
 
             index = regx.indexIn(textEditText, pos);
