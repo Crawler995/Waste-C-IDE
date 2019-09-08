@@ -149,5 +149,10 @@ void MainWindow::connectSignalAndSlot()
         workArea->getRunOutputArea()->getTextEdit()->clear();
         workArea->getEditorArea()->runCurFile();
     });
+
+    connect(editorSettingAction, &QAction::triggered,
+            this, [=]() {
+        workArea->getEditorArea()->openSettingDialog();
+    });
 }
 

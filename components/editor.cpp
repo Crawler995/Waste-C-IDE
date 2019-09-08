@@ -1,5 +1,6 @@
 #include "editor.h"
 #include "features/colorboard.h"
+#include "editorarea.h"
 
 #include <QFont>
 #include <QDebug>
@@ -15,7 +16,7 @@ Editor::Editor(QWidget *parent) : QWidget(parent)
 
     layout = new QHBoxLayout(this);
     textEdit = new TextEdit(this);
-    textEdit->setFont(QFont("Consolas", 14));
+    textEdit->setFont(qobject_cast<EditorArea*>(parent)->getDefaultFont());
     layout->addWidget(textEdit);
     layout->setContentsMargins(0, 0, 0, 0);
     setLayout(layout);

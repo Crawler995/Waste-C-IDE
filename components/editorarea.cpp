@@ -10,10 +10,13 @@
 #include <QTextStream>
 #include <QDir>
 #include <QProcess>
+#include <QFontDialog>
 #include <QMessageBox>
 
 EditorArea::EditorArea(QWidget *parent) : QTabWidget(parent)
 {
+    defaultFont = QFont("consolas", 14);
+
     WelcomePage *page = new WelcomePage(this);
     this->insertTab(0, page, "欢迎");
 
@@ -39,6 +42,11 @@ void EditorArea::initStyle()
 QString EditorArea::getCurEditorText()
 {
     return getCurEditor()->document()->toPlainText();
+}
+
+QFont EditorArea::getDefaultFont() const
+{
+    return defaultFont;
 }
 
 void EditorArea::createEditor()
@@ -217,4 +225,17 @@ void EditorArea::openFile()
 
     editors[currentIndex()]->setIsSave(true);
     editors[currentIndex()]->setFileName(fileName);
+}
+
+void EditorArea::openSettingDialog()
+{
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, defaultFont, this);
+
+    if (ok) {
+        foreach(Editor *editor, editors) {
+            editor->getTextEdit()->setFont(font);
+        }
+        defaultFont = font;
+    }
 }

@@ -23,11 +23,16 @@ public:
     void runCurFile();
     void openFile();
 
+    void openSettingDialog();
+
+    QFont getDefaultFont() const;
+
 private:
     void initStyle();
     QString getCurEditorText();
 
     QVector<Editor*> editors;
+    QFont defaultFont;
 
 signals:
     void cursorPositionChangedWithPos(int row, int col, int totalRowNum);
