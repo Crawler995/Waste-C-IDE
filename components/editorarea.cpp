@@ -282,3 +282,49 @@ void EditorArea::openSettingDialog()
         defaultFont = font;
     }
 }
+
+void EditorArea::startDebug(QVector<int> breakPointLines)
+{
+    qDebug() << "debug";
+    Editor *editor = editors[currentIndex()];
+
+    if(!editor->getIsSave()) {
+        emit createOutputInfo("文件未保存！\n");
+        return;
+    }
+
+    QProcess *process = new QProcess(this);
+    QString exeFilePath = QString(editor->getFileName()).replace(".c", ".exe");
+
+    QString cmd = QDir::toNativeSeparators(tr("gcc %1 -g -o %2\n").arg(editor->getFileName()).arg(exeFilePath));
+
+    process->start(cmd);
+
+    emit createOutputInfo("> " + cmd);
+    editor->setIsAlreadyCompile(true);
+
+    connect(process, &QProcess::readyReadStandardOutput, this, [=]() {
+        emit createOutputInfo(QString::fromUtf8(process->readAllStandardOutput()));
+    });
+    connect(process, &QProcess::readyReadStandardError, this, [=]() {
+        emit createOutputError(QString::fromUtf8(process->readAllStandardError()));
+        editor->setIsAlreadyCompile(false);
+    });
+    connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
+        process->close();
+
+        QProcess *debugProcess = new QProcess(this);
+        debugProcess->start(QString("gdb %1").arg(exeFilePath));
+
+        connect(debugProcess, &QProcess::readyReadStandardOutput, this, [=]() {
+            emit createOutputInfo(QString::fromUtf8(debugProcess->readAllStandardOutput()));
+        });
+
+        foreach (int line, breakPointLines) {
+            debugProcess->write(QString("break %1\n").arg(line).toStdString().c_str());
+        }
+
+        debugProcess->write("run\n");
+    });
+}

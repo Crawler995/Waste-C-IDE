@@ -13,7 +13,7 @@ WorkArea::WorkArea(QWidget *parent) : QSplitter(parent)
     editorArea = new EditorArea(vSplitter);
     runOutputArea = new RunOutputArea(vSplitter);
 
-    setHStretchFactor(debugInfoArea, 6);
+    setHStretchFactor(debugInfoArea, 2);
     setHStretchFactor(vSplitter, 5);
     setVStretchFactor(editorArea, 6);
     setVStretchFactor(runOutputArea, 1);
@@ -55,6 +55,11 @@ void WorkArea::setHStretchFactor(QWidget *widget, int factor)
     policy.setHorizontalPolicy(QSizePolicy::Maximum);
     policy.setVerticalPolicy(QSizePolicy::Maximum);
     widget->setSizePolicy(policy);
+}
+
+DebugInfoArea *WorkArea::getDebugInfoArea() const
+{
+    return debugInfoArea;
 }
 
 RunOutputArea *WorkArea::getRunOutputArea() const

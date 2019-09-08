@@ -27,6 +27,8 @@ public:
 
     void openSettingDialog();
 
+    void startDebug(QVector<int> breakPointLines);
+
     QFont getDefaultFont() const;
 
 private:

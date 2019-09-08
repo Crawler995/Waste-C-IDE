@@ -19,6 +19,8 @@ public:
 
     RunOutputArea *getRunOutputArea() const;
 
+    DebugInfoArea *getDebugInfoArea() const;
+
 private:
     void initStyle();
     void setVStretchFactor(QWidget *widget, int factor);

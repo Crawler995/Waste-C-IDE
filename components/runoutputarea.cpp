@@ -44,12 +44,14 @@ void RunOutputArea::outputInfo(const QString &info)
 {
     textEdit->moveCursor(QTextCursor::End);
     textEdit->insertPlainText(info);
+    textEdit->moveCursor(QTextCursor::End);
 }
 
 void RunOutputArea::outputError(const QString &error)
 {
     textEdit->moveCursor(QTextCursor::End);
     textEdit->insertHtml(tr("<font color=\"#FF0000\">%1</font>").arg(QString(error).replace("\r\n", "<br>")));
+    textEdit->moveCursor(QTextCursor::End);
 }
 
 ActionButton *RunOutputArea::getCompileRunButton() const

@@ -24,7 +24,7 @@ MainWindow::~MainWindow()
 void MainWindow::initWindowSize() {
     window()->showMaximized();
     QApplication::setFont(QFont("Microsoft Yahei"));
-    setMinimumSize(500, 500);
+    setMinimumSize(900, 700);
 }
 
 void MainWindow::createMenu() {
@@ -172,6 +172,19 @@ void MainWindow::connectSignalAndSlot()
     connect(editorSettingAction, &QAction::triggered,
             this, [=]() {
         workArea->getEditorArea()->openSettingDialog();
+    });
+
+    connect(workArea->getDebugInfoArea()->getAddBreakPointButton(), &QPushButton::clicked,
+            this, [=]() {
+        QTextCursor cursor = workArea->getEditorArea()->getCurEditor()->textCursor();
+        int col = cursor.columnNumber() + 1;
+        int row = cursor.block().layout()->lineForTextPosition(col).lineNumber() +
+                  cursor.block().firstLineNumber() + 1;
+        workArea->getDebugInfoArea()->addBreakPointLine(row);
+    });
+    connect(workArea->getDebugInfoArea()->getDebugButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getEditorArea()->startDebug(workArea->getDebugInfoArea()->getBreakPointLines());
     });
 }
 
