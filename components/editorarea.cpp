@@ -10,6 +10,7 @@
 #include <QTextStream>
 #include <QDir>
 #include <QProcess>
+#include <QMessageBox>
 
 EditorArea::EditorArea(QWidget *parent) : QTabWidget(parent)
 {
@@ -65,7 +66,11 @@ void EditorArea::createEditor()
 
 void EditorArea::saveCurEditorToFile()
 {
-    if(qobject_cast<WelcomePage*>(this->currentWidget())) {
+    if(this->count() == 0 || qobject_cast<WelcomePage*>(this->currentWidget())) {
+        QMessageBox box;
+        box.setIcon(QMessageBox::Critical);
+        box.setText("当前无打开文件！");
+        box.exec();
         return;
     }
 
@@ -95,6 +100,14 @@ void EditorArea::saveCurEditorToFile()
 
 void EditorArea::findWord()
 {
+    if(this->count() == 0 || qobject_cast<WelcomePage*>(this->currentWidget())) {
+        QMessageBox box;
+        box.setIcon(QMessageBox::Critical);
+        box.setText("当前无打开文件！");
+        box.exec();
+        return;
+    }
+
     FindOrReplaceDialog *dialog = new FindOrReplaceDialog();
 
     connect(dialog->getFindButton(), &QPushButton::clicked,
