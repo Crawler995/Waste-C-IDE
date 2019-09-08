@@ -69,6 +69,93 @@ QString TextEdit::getPreWord()
     return res;
 }
 
+void TextEdit::highLightMatchBracketFromLeft(QChar left, QChar right)
+{
+    QTextCursor endCursor = QTextCursor(this->textCursor());
+    endCursor.movePosition(QTextCursor::End);
+    QTextCursor cursor = this->textCursor(), initCursor = cursor;
+    QTextCharFormat format;
+    format.setBackground(QColor(255, 255, 255, 60));
+
+    bool find = true;
+    int count = 1;
+    while(true) {
+        this->moveCursor(QTextCursor::NextCharacter);
+        QChar c = getStringAroundCursor(LEFT, 1)[0];
+        if(c == right) {
+            count--;
+            if(count == 0) {
+                break;
+            }
+        }
+        else if(c == left) {
+            count++;
+        }
+
+        if(this->textCursor().position() == endCursor.position()) {
+            find = false;
+            break;
+        }
+    }
+
+    if(find) {
+        this->moveCursor(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+        this->textCursor().mergeCharFormat(format);
+    }
+
+    this->setTextCursor(initCursor);
+}
+
+void TextEdit::highLightMatchBracketFromRight(QChar left, QChar right)
+{
+    QTextCursor endCursor = QTextCursor(this->textCursor());
+    endCursor.movePosition(QTextCursor::End);
+    QTextCursor cursor = this->textCursor(), initCursor = cursor;
+    QTextCharFormat format;
+    format.setBackground(QColor(255, 255, 255, 60));
+
+    bool find = true;
+    int count = 1;
+    while(true) {
+        this->moveCursor(QTextCursor::PreviousCharacter);
+        QChar c = getStringAroundCursor(LEFT, 1)[0];
+        if(c == left) {
+            count--;
+            if(count == 0) {
+                break;
+            }
+        }
+        else if(c == right) {
+            count++;
+        }
+
+        if(this->textCursor().position() == endCursor.position()) {
+            find = false;
+            break;
+        }
+    }
+
+    if(find) {
+        this->moveCursor(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+        this->textCursor().mergeCharFormat(format);
+    }
+
+    this->setTextCursor(initCursor);
+}
+
+void TextEdit::clearMatchBracketHighLight()
+{
+    QTextCursor cursor = this->textCursor(), initCursor = cursor;
+    QTextCharFormat format;
+    format.setBackground(QColor(0, 0, 0, 0));
+
+    cursor.movePosition(QTextCursor::Start);
+    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+    cursor.mergeCharFormat(format);
+
+    this->setTextCursor(initCursor);
+}
+
 void TextEdit::keyPressEvent(QKeyEvent *event)
 {
     bool isIgnore = false;
@@ -213,6 +300,36 @@ bool TextEdit::event(QEvent *e)
     }
     QTextEdit::event(e);
     return true;
+}
+
+void TextEdit::mousePressEvent(QMouseEvent *event)
+{
+    QTextEdit::mousePressEvent(event);
+    clearMatchBracketHighLight();
+
+    if(event->button() == Qt::LeftButton) {
+        QTextCursor cursor = cursorForPosition(event->pos());
+        this->setTextCursor(cursor);
+
+        if(getStringAroundCursor(LEFT, 1)[0] == '(') {
+            highLightMatchBracketFromLeft('(', ')');
+        }
+        else if(getStringAroundCursor(LEFT, 1)[0] == '[') {
+            highLightMatchBracketFromLeft('[', ']');
+        }
+        else if(getStringAroundCursor(LEFT, 1)[0] == '{') {
+            highLightMatchBracketFromLeft('{', '}');
+        }
+        else if(getStringAroundCursor(LEFT, 1)[0] == ')') {
+            highLightMatchBracketFromRight('(', ')');
+        }
+        else if(getStringAroundCursor(LEFT, 1)[0] == ']') {
+            highLightMatchBracketFromRight('[', ']');
+        }
+        else if(getStringAroundCursor(LEFT, 1)[0] == '}') {
+            highLightMatchBracketFromRight('{', '}');
+        }
+    }
 }
 
 int TextEdit::getCurLineStartTabNum()

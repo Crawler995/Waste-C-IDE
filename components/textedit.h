@@ -17,11 +17,15 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event);
     bool event(QEvent *e);
+    void mousePressEvent(QMouseEvent *event);
 
 private:
     int getCurLineStartTabNum();
     QString getStringAroundCursor(Dir dir, int length);
     QString getPreWord();
+    void highLightMatchBracketFromLeft(QChar left, QChar right);
+    void highLightMatchBracketFromRight(QChar left, QChar right);
+    void clearMatchBracketHighLight();
 
     CPPHighLighter *highLighter;
     CCompleter *completer;
