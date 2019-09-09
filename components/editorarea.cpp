@@ -63,13 +63,36 @@ void EditorArea::highLightBreakPointLine()
 
 void EditorArea::highLightCurRunLine(int line)
 {
-    QTextEdit::ExtraSelection selection;
-    selection.format.setBackground(QColor(0, 0, 255, 60));
-    selection.format.setProperty(QTextFormat::FullWidthSelection,true);
-    selection.cursor = QTextCursor(getCurEditor()->document()->findBlockByLineNumber(line - 1));
-    selection.cursor.clearSelection();
-    extraSelection.clear();
-    extraSelection.append(selection);
+    bool have = false;
+    for (auto it = extraSelection.begin(); it != extraSelection.end(); it++) {
+        if((*it).format.background() == QBrush(QColor(0, 0, 255, 60))) {
+            (*it).cursor = QTextCursor(getCurEditor()->document()->findBlockByLineNumber(line - 1));
+            (*it).cursor.clearSelection();
+            have = true;
+        }
+    }
+    if(!have) {
+        QTextEdit::ExtraSelection selection;
+        selection.format.setBackground(QColor(0, 0, 255, 60));
+        selection.format.setProperty(QTextFormat::FullWidthSelection,true);
+        selection.cursor = QTextCursor(getCurEditor()->document()->findBlockByLineNumber(line - 1));
+        selection.cursor.clearSelection();
+        extraSelection.append(selection);
+    }
+    getCurEditor()->setExtraSelections(extraSelection);
+}
+
+void EditorArea::clearHighLightCurRunLine()
+{
+    int index;
+    for (auto it = extraSelection.begin(); it != extraSelection.end(); it++) {
+        if((*it).format.background() == QBrush(QColor(0, 0, 255, 60))) {
+            index = it - extraSelection.begin();
+            break;
+        }
+    }
+
+    extraSelection.removeAt(index);
     getCurEditor()->setExtraSelections(extraSelection);
 }
 

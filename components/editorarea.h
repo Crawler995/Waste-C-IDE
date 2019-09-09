@@ -35,6 +35,7 @@ public:
 
     void highLightBreakPointLine();
     void highLightCurRunLine(int line);
+    void clearHighLightCurRunLine();
 
     void parseGDBOutput(const QString &output, QString &curRunLine, QVector<QPair<QString, QString> > &varInfo);
 

@@ -219,6 +219,7 @@ void MainWindow::connectSignalAndSlot()
         workArea->getEditorArea()->executeGDBCommand("kill");
         workArea->getEditorArea()->executeGDBCommand("y");
         workArea->getEditorArea()->executeGDBCommand("quit");
+        workArea->getEditorArea()->clearHighLightCurRunLine();
     });
     connect(workArea->getDebugInfoArea()->getSingleStepEnterButton(), &QPushButton::clicked,
             this, [=]() {
