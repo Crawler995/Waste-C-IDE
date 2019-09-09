@@ -5,6 +5,7 @@
 
 #include <QWidget>
 #include <QTabWidget>
+#include <QProcess>
 #include <QVector>
 
 class EditorArea : public QTabWidget
@@ -27,6 +28,7 @@ public:
 
     void openSettingDialog();
 
+    void executeGDBCommand(const QString &command);
     void startDebug(QVector<int> breakPointLines);
 
     QFont getDefaultFont() const;
@@ -37,6 +39,8 @@ private:
 
     QVector<Editor*> editors;
     QFont defaultFont;
+
+    QProcess *debugProcess;
 
 signals:
     void cursorPositionChangedWithPos(int row, int col, int totalRowNum);

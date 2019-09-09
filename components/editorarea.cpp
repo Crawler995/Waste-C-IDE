@@ -283,6 +283,11 @@ void EditorArea::openSettingDialog()
     }
 }
 
+void EditorArea::executeGDBCommand(const QString &command)
+{
+    debugProcess->write(QString(command + '\n').toStdString().c_str());
+}
+
 void EditorArea::startDebug(QVector<int> breakPointLines)
 {
     qDebug() << "debug";
@@ -314,7 +319,7 @@ void EditorArea::startDebug(QVector<int> breakPointLines)
             this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
         process->close();
 
-        QProcess *debugProcess = new QProcess(this);
+        debugProcess = new QProcess(this);
         debugProcess->start(QString("gdb %1").arg(exeFilePath));
 
         connect(debugProcess, &QProcess::readyReadStandardOutput, this, [=]() {
@@ -322,9 +327,9 @@ void EditorArea::startDebug(QVector<int> breakPointLines)
         });
 
         foreach (int line, breakPointLines) {
-            debugProcess->write(QString("break %1\n").arg(line).toStdString().c_str());
+            executeGDBCommand(QString("break %1").arg(line));
         }
 
-        debugProcess->write("run\n");
+        executeGDBCommand("run");
     });
 }

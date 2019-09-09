@@ -17,13 +17,12 @@ DebugInfoArea::DebugInfoArea(QWidget *parent) : QWidget(parent)
     initBreakPointTreeView();
 
     layout->addWidget(areaTitleLabel);
-    layout->addWidget(buttonWidget);
+
     layout->addWidget(breakPointTreeView);
     layout->addStretch();
+    layout->addWidget(buttonWidget);
 
     setLayout(layout);
-
-    breakPointLines.append(2);
 }
 
 void DebugInfoArea::addBreakPointLine(int line)
@@ -46,22 +45,62 @@ QVector<int> DebugInfoArea::getBreakPointLines() const
     return breakPointLines;
 }
 
+ActionButton *DebugInfoArea::getAddWatchButton() const
+{
+    return addWatchButton;
+}
+
+ActionButton *DebugInfoArea::getNextStepButton() const
+{
+    return nextStepButton;
+}
+
+ActionButton *DebugInfoArea::getJumpButton() const
+{
+    return jumpButton;
+}
+
+ActionButton *DebugInfoArea::getNextSentenceButton() const
+{
+    return nextSentenceButton;
+}
+
+ActionButton *DebugInfoArea::getStopButton() const
+{
+    return stopButton;
+}
+
+ActionButton *DebugInfoArea::getSingleStepEnterButton() const
+{
+    return singleStepEnterButton;
+}
+
+ActionButton *DebugInfoArea::getJumpFuncButton() const
+{
+    return jumpFuncButton;
+}
+
+ActionButton *DebugInfoArea::getEnterSentenceButton() const
+{
+    return enterSentenceButton;
+}
+
 void DebugInfoArea::initButtons()
 {
     buttonWidget = new QWidget(this);
     buttonLayout = new QGridLayout(buttonWidget);
 
-    addBreakPointButton = new ActionButton("添加断点", buttonWidget);
+    addBreakPointButton = new ActionButton("当前行添加断点", buttonWidget); // break
 
     debugButton = new ActionButton("调试", buttonWidget);
-    addWatchButton = new ActionButton("添加查看", buttonWidget);
-    nextStepButton = new ActionButton("下一步", buttonWidget);
-    jumpButton = new ActionButton("跳过", buttonWidget);
-    nextSentenceButton = new ActionButton("下一条语句", buttonWidget);
+    addWatchButton = new ActionButton("添加查看", buttonWidget); // display
+    nextStepButton = new ActionButton("下一步", buttonWidget); // next
+    jumpButton = new ActionButton("跳过", buttonWidget); // continue
+    nextSentenceButton = new ActionButton("下一条语句", buttonWidget); // nexti
     stopButton = new ActionButton("停止执行", buttonWidget);
-    singleStepEnterButton = new ActionButton("单步进入", buttonWidget);
-    jumpFuncButton = new ActionButton("跳过函数", buttonWidget);
-    enterSentenceButton = new ActionButton("进入语句", buttonWidget);
+    singleStepEnterButton = new ActionButton("单步进入", buttonWidget); // step
+    jumpFuncButton = new ActionButton("跳过函数", buttonWidget); // finish
+    enterSentenceButton = new ActionButton("进入语句", buttonWidget); // stepi
 
     buttonLayout->addWidget(addBreakPointButton, 0, 0, 1, 1);
     buttonLayout->addWidget(debugButton, 0, 1, 1, 1);

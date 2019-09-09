@@ -17,12 +17,29 @@ class DebugInfoArea : public QWidget
 public:
     explicit DebugInfoArea(QWidget *parent = 0);
     void addBreakPointLine(int line);
+    void appendItem(const QString &name, const QString &value);
 
     ActionButton *getDebugButton() const;
 
     ActionButton *getAddBreakPointButton() const;
 
     QVector<int> getBreakPointLines() const;
+
+    ActionButton *getAddWatchButton() const;
+
+    ActionButton *getNextStepButton() const;
+
+    ActionButton *getJumpButton() const;
+
+    ActionButton *getNextSentenceButton() const;
+
+    ActionButton *getStopButton() const;
+
+    ActionButton *getSingleStepEnterButton() const;
+
+    ActionButton *getJumpFuncButton() const;
+
+    ActionButton *getEnterSentenceButton() const;
 
 private:
     QLabel *areaTitleLabel;
@@ -43,7 +60,7 @@ private:
 
     void initButtons();
     void initBreakPointTreeView();
-    void appendItem(const QString &name, const QString &value);
+
 };
 
 #endif // DEBUGINFOAREA_H

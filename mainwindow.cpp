@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "features/config.h"
 #include "features/colorboard.h"
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -174,6 +175,7 @@ void MainWindow::connectSignalAndSlot()
         workArea->getEditorArea()->openSettingDialog();
     });
 
+    // debug
     connect(workArea->getDebugInfoArea()->getAddBreakPointButton(), &QPushButton::clicked,
             this, [=]() {
         QTextCursor cursor = workArea->getEditorArea()->getCurEditor()->textCursor();
@@ -185,6 +187,46 @@ void MainWindow::connectSignalAndSlot()
     connect(workArea->getDebugInfoArea()->getDebugButton(), &QPushButton::clicked,
             this, [=]() {
         workArea->getEditorArea()->startDebug(workArea->getDebugInfoArea()->getBreakPointLines());
+    });
+    connect(workArea->getDebugInfoArea()->getAddWatchButton(), &QPushButton::clicked,
+            this, [=]() {
+        QInputDialog dialog;
+        dialog.setWindowTitle("添加查看");
+        dialog.setLabelText("输入变量名");
+        if(dialog.exec() == QInputDialog::Accepted) {
+            workArea->getEditorArea()->executeGDBCommand("display " + dialog.textValue());
+            workArea->getDebugInfoArea()->appendItem(dialog.textValue(), "");
+        }
+    });
+    connect(workArea->getDebugInfoArea()->getNextStepButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getEditorArea()->executeGDBCommand("next");
+    });
+    connect(workArea->getDebugInfoArea()->getJumpButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getEditorArea()->executeGDBCommand("continue");
+    });
+    connect(workArea->getDebugInfoArea()->getNextSentenceButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getEditorArea()->executeGDBCommand("nexti");
+    });
+    connect(workArea->getDebugInfoArea()->getStopButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getEditorArea()->executeGDBCommand("kill");
+        workArea->getEditorArea()->executeGDBCommand("y");
+        workArea->getEditorArea()->executeGDBCommand("quit");
+    });
+    connect(workArea->getDebugInfoArea()->getSingleStepEnterButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getEditorArea()->executeGDBCommand("step");
+    });
+    connect(workArea->getDebugInfoArea()->getJumpFuncButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getEditorArea()->executeGDBCommand("finish");
+    });
+    connect(workArea->getDebugInfoArea()->getEnterSentenceButton(), &QPushButton::clicked,
+            this, [=]() {
+        workArea->getEditorArea()->executeGDBCommand("stepi");
     });
 }
 
