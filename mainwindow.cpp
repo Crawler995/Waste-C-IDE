@@ -2,6 +2,8 @@
 #include "features/config.h"
 #include "features/colorboard.h"
 #include <QInputDialog>
+#include <QVector>
+#include <QPair>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -183,6 +185,8 @@ void MainWindow::connectSignalAndSlot()
         int row = cursor.block().layout()->lineForTextPosition(col).lineNumber() +
                   cursor.block().firstLineNumber() + 1;
         workArea->getDebugInfoArea()->addBreakPointLine(row);
+
+        workArea->getEditorArea()->highLightBreakPointLine();
     });
     connect(workArea->getDebugInfoArea()->getDebugButton(), &QPushButton::clicked,
             this, [=]() {
@@ -227,6 +231,13 @@ void MainWindow::connectSignalAndSlot()
     connect(workArea->getDebugInfoArea()->getEnterSentenceButton(), &QPushButton::clicked,
             this, [=]() {
         workArea->getEditorArea()->executeGDBCommand("stepi");
+    });
+
+    connect(workArea->getEditorArea(), &EditorArea::captureVarInfo,
+            this, [=](const QVector<QPair<QString, QString>> &varInfo) {
+        for(auto it = varInfo.constBegin(); it != varInfo.constEnd(); it++) {
+            workArea->getDebugInfoArea()->updateItemValue((*it).first, (*it).second);
+        }
     });
 }
 

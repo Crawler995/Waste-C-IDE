@@ -33,6 +33,11 @@ public:
 
     QFont getDefaultFont() const;
 
+    void highLightBreakPointLine();
+    void highLightCurRunLine(int line);
+
+    void parseGDBOutput(const QString &output, QString &curRunLine, QVector<QPair<QString, QString> > &varInfo);
+
 private:
     void initStyle();
     QString getCurEditorText();
@@ -42,10 +47,14 @@ private:
 
     QProcess *debugProcess;
 
+    QList<QTextEdit::ExtraSelection> extraSelection;
+
 signals:
     void cursorPositionChangedWithPos(int row, int col, int totalRowNum);
     void createOutputInfo(const QString &info);
     void createOutputError(const QString &error);
+
+    void captureVarInfo(const QVector<QPair<QString, QString> > &varInfo);
 };
 
 #endif // EDITORAREA_H

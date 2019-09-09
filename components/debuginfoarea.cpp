@@ -150,3 +150,15 @@ void DebugInfoArea::appendItem(const QString &name, const QString &value)
     breakPoint.append(valueItem);
     breakPointItemModel->appendRow(breakPoint);
 }
+
+void DebugInfoArea::updateItemValue(const QString &name, const QString &value)
+{
+    qDebug() << name << "=" << value;
+    for(int i = 0; i < breakPointItemModel->rowCount(); i++) {
+        QStandardItem *r = breakPointItemModel->item(i, 0);
+        if(r->text() == name) {
+            QStandardItem *v = new QStandardItem(value);
+            breakPointItemModel->setItem(i, 1, v);
+        }
+    }
+}

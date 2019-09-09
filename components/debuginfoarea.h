@@ -18,6 +18,7 @@ public:
     explicit DebugInfoArea(QWidget *parent = 0);
     void addBreakPointLine(int line);
     void appendItem(const QString &name, const QString &value);
+    void updateItemValue(const QString &name, const QString &value);
 
     ActionButton *getDebugButton() const;
 

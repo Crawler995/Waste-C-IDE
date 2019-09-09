@@ -49,6 +49,56 @@ QFont EditorArea::getDefaultFont() const
     return defaultFont;
 }
 
+void EditorArea::highLightBreakPointLine()
+{
+    QTextEdit::ExtraSelection selection;
+    selection.format.setBackground(QColor(255, 0, 0, 60));
+    selection.format.setProperty(QTextFormat::FullWidthSelection,true);
+    selection.cursor = getCurEditor()->textCursor();
+    selection.cursor.clearSelection();
+
+    extraSelection.append(selection);
+    getCurEditor()->setExtraSelections(extraSelection);
+}
+
+void EditorArea::highLightCurRunLine(int line)
+{
+    QTextEdit::ExtraSelection selection;
+    selection.format.setBackground(QColor(0, 0, 255, 60));
+    selection.format.setProperty(QTextFormat::FullWidthSelection,true);
+    selection.cursor = QTextCursor(getCurEditor()->document()->findBlockByLineNumber(line - 1));
+    selection.cursor.clearSelection();
+    extraSelection.clear();
+    extraSelection.append(selection);
+    getCurEditor()->setExtraSelections(extraSelection);
+}
+
+void EditorArea::parseGDBOutput(const QString &output, QString &curRunLine,
+                                QVector<QPair<QString, QString> > &varInfo)
+{
+    QRegExp lineNumRegx("(\\d+)\\t\\t");
+    lineNumRegx.setMinimal(true);
+    lineNumRegx.indexIn(output);
+    curRunLine = lineNumRegx.capturedTexts().at(1);
+
+    QStringList infoList = output.split("\r\n");
+
+
+    foreach(QString item, infoList) {
+        QRegExp varInfoRegx("\\d+: (.*) = (.*)$");
+        varInfoRegx.setMinimal(true);
+        varInfoRegx.indexIn(item);
+
+        QString name = varInfoRegx.capturedTexts().at(1);
+        QString value = varInfoRegx.capturedTexts().at(2);
+
+        if(name != "" && value != "") {
+            QPair<QString, QString> p = qMakePair(name, value);
+            varInfo.append(p);
+        }
+    }
+}
+
 void EditorArea::createEditor()
 {
     if(qobject_cast<WelcomePage*>(this->currentWidget())) {
@@ -323,7 +373,19 @@ void EditorArea::startDebug(QVector<int> breakPointLines)
         debugProcess->start(QString("gdb %1").arg(exeFilePath));
 
         connect(debugProcess, &QProcess::readyReadStandardOutput, this, [=]() {
-            emit createOutputInfo(QString::fromUtf8(debugProcess->readAllStandardOutput()));
+            const QString output = QString::fromUtf8(debugProcess->readAllStandardOutput());
+            emit createOutputInfo(output);
+
+            QString curRunLine;
+            QVector<QPair<QString, QString> > varInfo;
+            parseGDBOutput(output, curRunLine, varInfo);
+
+            if(curRunLine != "") {
+                highLightCurRunLine(curRunLine.toInt());
+            }
+            if(!varInfo.empty()) {
+                emit captureVarInfo(varInfo);
+            }
         });
 
         foreach (int line, breakPointLines) {
