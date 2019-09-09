@@ -121,6 +121,7 @@ void DebugInfoArea::initButtons()
 void DebugInfoArea::initBreakPointTreeView()
 {
     breakPointTreeView = new QTreeView(this);
+    breakPointTreeView->setItemsExpandable(false);
     breakPointTreeView->setStyleSheet("QTreeView{font-size: 16px;"
                                       "background: transparent; outline: none;"
                                       "color: " + ColorBoard::lightGray + ";"

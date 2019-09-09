@@ -152,7 +152,7 @@ void EditorArea::compileCurFile()
     Editor *editor = editors[currentIndex()];
 
     if(!editor->getIsSave()) {
-        emit createOutputInfo("文件未保存！");
+        emit createOutputInfo("文件未保存！\n");
         return;
     }
 
@@ -178,7 +178,7 @@ void EditorArea::compileCurFile()
     });
     connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
             this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
-        emit createOutputInfo("\n终端任务结束。");
+        emit createOutputInfo("\n终端任务结束。\n");
     });
 }
 
@@ -208,7 +208,7 @@ void EditorArea::runCurFile()
     });
     connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
             this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
-        emit createOutputInfo("\n终端任务结束。");
+        emit createOutputInfo("\n终端任务结束。\n");
     });
 }
 
