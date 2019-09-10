@@ -109,7 +109,7 @@ void TextEdit::highLightMatchBracketFromLeft(QChar left, QChar right)
 void TextEdit::highLightMatchBracketFromRight(QChar left, QChar right)
 {
     QTextCursor endCursor = QTextCursor(this->textCursor());
-    endCursor.movePosition(QTextCursor::End);
+    endCursor.movePosition(QTextCursor::Start);
     QTextCursor cursor = this->textCursor(), initCursor = cursor;
     QTextCharFormat format;
     format.setBackground(QColor(255, 255, 255, 60));
@@ -129,7 +129,7 @@ void TextEdit::highLightMatchBracketFromRight(QChar left, QChar right)
             count++;
         }
 
-        if(this->textCursor().position() == endCursor.position()) {
+        if(this->textCursor().position() == endCursor.position() + 1) {
             find = false;
             break;
         }
@@ -178,10 +178,6 @@ void TextEdit::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == '{') {
         this->insertPlainText("}");
-        this->moveCursor(QTextCursor::PreviousCharacter);
-    }
-    else if(event->key() == '<') {
-        this->insertPlainText(">");
         this->moveCursor(QTextCursor::PreviousCharacter);
     }
 
@@ -279,17 +275,6 @@ bool TextEdit::event(QEvent *e)
         else if(event->key() == '\'') {
             QChar nextChar = getStringAroundCursor(RIGHT, 1)[0];
             if(nextChar == '\'') {
-                this->moveCursor(QTextCursor::NextCharacter);
-            }
-            else {
-                QTextEdit::event(e);
-            }
-            return true;
-        }
-
-        else if(event->key() == '>') {
-            QChar nextChar = getStringAroundCursor(RIGHT, 1)[0];
-            if(nextChar == '>') {
                 this->moveCursor(QTextCursor::NextCharacter);
             }
             else {

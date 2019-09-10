@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QPair>
 #include <QStandardItemModel>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -55,6 +56,8 @@ void MainWindow::createMenu() {
 
     settingMenu = mainMenuBar->addMenu(tr("设置"));
     editorSettingAction = settingMenu->addAction(tr("编辑器设置"));
+    fullScreenAction = settingMenu->addAction(tr("进入/退出全屏"));
+    fullScreenAction->setShortcut(QKeySequence(QLatin1String("Esc")));
 }
 
 void MainWindow::createStatusBar()
@@ -176,6 +179,22 @@ void MainWindow::connectSignalAndSlot()
     connect(editorSettingAction, &QAction::triggered,
             this, [=]() {
         workArea->getEditorArea()->openSettingDialog();
+    });
+    connect(fullScreenAction, &QAction::triggered,
+            this, [=]() {
+        qDebug() << this->windowFlags();
+        if(this->windowFlags() == Qt::Window|Qt::WindowTitleHint|
+                Qt::WindowSystemMenuHint|Qt::WindowMinMaxButtonsHint|
+                Qt::WindowCloseButtonHint) {
+            this->setWindowFlags(Qt::WindowTitleHint|
+                                 Qt::WindowSystemMenuHint|Qt::WindowMinMaxButtonsHint|
+                                 Qt::WindowCloseButtonHint);
+        }
+        else {
+            this->setWindowFlags(Qt::Window|Qt::WindowTitleHint|
+                                 Qt::WindowSystemMenuHint|Qt::WindowMinMaxButtonsHint|
+                                 Qt::WindowCloseButtonHint);
+        }
     });
 
     // debug

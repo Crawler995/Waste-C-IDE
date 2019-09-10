@@ -40,7 +40,7 @@ private:
     QAction *compileAction, *runAction, *compileRunAction, *debugAction;
 
     QMenu *settingMenu;
-    QAction *editorSettingAction;
+    QAction *editorSettingAction, *fullScreenAction;
 
     QStatusBar *mainStatusBar;
     QLabel *cursorPositionLabel, *totalLineNumLabel;
