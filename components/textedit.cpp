@@ -82,8 +82,10 @@ void TextEdit::highLightMatchBracketFromLeft(QChar left, QChar right)
     bool find = true;
     int count = 1;
     while(true) {
-        this->moveCursor(QTextCursor::NextCharacter);
-        QChar c = getStringAroundCursor(LEFT, 1)[0];
+        cursor.movePosition(QTextCursor::NextCharacter);
+        cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+        QChar c = cursor.selectedText()[0];
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
         if(c == right) {
             count--;
             if(count == 0) {
@@ -101,9 +103,9 @@ void TextEdit::highLightMatchBracketFromLeft(QChar left, QChar right)
     }
 
     if(find) {
-        matchBracketCursor = this->textCursor();
-        this->moveCursor(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
-        this->textCursor().mergeCharFormat(format);
+        matchBracketCursor = cursor;
+        cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+        cursor.mergeCharFormat(format);
     }
     else {
         matchBracketCursor = QTextCursor();
@@ -123,8 +125,11 @@ void TextEdit::highLightMatchBracketFromRight(QChar left, QChar right)
     bool find = true;
     int count = 1;
     while(true) {
-        this->moveCursor(QTextCursor::PreviousCharacter);
-        QChar c = getStringAroundCursor(LEFT, 1)[0];
+        cursor.movePosition(QTextCursor::PreviousCharacter);
+        cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+        QChar c = cursor.selectedText()[0];
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+
         if(c == left) {
             count--;
             if(count == 0) {
@@ -135,16 +140,16 @@ void TextEdit::highLightMatchBracketFromRight(QChar left, QChar right)
             count++;
         }
 
-        if(this->textCursor().position() == endCursor.position() + 1) {
+        if(cursor.position() == endCursor.position() + 1) {
             find = false;
             break;
         }
     }
 
     if(find) {
-        matchBracketCursor = this->textCursor();
-        this->moveCursor(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
-        this->textCursor().mergeCharFormat(format);
+        matchBracketCursor = cursor;
+        cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+        cursor.mergeCharFormat(format);
     }
     else {
         matchBracketCursor = QTextCursor();
