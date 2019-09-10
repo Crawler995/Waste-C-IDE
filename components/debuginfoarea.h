@@ -19,6 +19,7 @@ public:
     void addBreakPointLine(int line);
     void appendItem(const QString &name, const QString &value);
     void updateItemValue(const QString &name, const QString &value);
+    void clearVarInfo();
 
     ActionButton *getDebugButton() const;
 
@@ -54,8 +55,8 @@ private:
         *nextSentenceButton, *stopButton, *singleStepEnterButton,
         *jumpFuncButton, *enterSentenceButton;
 
-    QTreeView *breakPointTreeView;
-    QStandardItemModel *breakPointItemModel;
+    QTreeView *varInfoTreeView;
+    QStandardItemModel *varInfoItemModel;
 
     QVector<int> breakPointLines;
 

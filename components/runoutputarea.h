@@ -30,15 +30,24 @@ public slots:
     void outputInfo(const QString &info);
     void outputError(const QString &error);
 
+
+protected:
+    bool eventFilter(QObject *watched, QEvent *event);
+
 private:
     QWidget *titleWidget;
     QLabel *areaTitleLabel;
     ActionButton *compileButton, *runButton, *compileRunButton;
 
-    QTextEdit *textEdit;
+    QWidget *textEditWidget;
+    QTextEdit *textEdit, *inputTextEdit;
 
     QHBoxLayout *titleLayout;
+    QHBoxLayout *textEditLayout;
     QVBoxLayout *layout;
+
+signals:
+    void userInputData(const QString &data);
 };
 
 #endif // RUNOUTPUTAREA_H

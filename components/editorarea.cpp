@@ -27,6 +27,9 @@ EditorArea::EditorArea(QWidget *parent) : QTabWidget(parent)
             this, [=](int index) {
         this->removeTab(index);
     });
+
+    debugProcess = process = nullptr;
+    isDebuging = false;
 }
 
 QTextEdit *EditorArea::getCurEditor()
@@ -119,6 +122,22 @@ void EditorArea::parseGDBOutput(const QString &output, QString &curRunLine,
             QPair<QString, QString> p = qMakePair(name, value);
             varInfo.append(p);
         }
+    }
+}
+
+void EditorArea::writeUserInputData(const QString &data)
+{
+    if(isDebuging) {
+        if(!debugProcess || !debugProcess->isOpen()) {
+            return;
+        }
+        debugProcess->write(QString(data + '\r\n').toStdString().c_str());
+    }
+    else {
+        if(!process || !process->isOpen()) {
+            return;
+        }
+        process->write(QString(data + '\r\n').toStdString().c_str());
     }
 }
 
@@ -223,13 +242,14 @@ void EditorArea::findWord()
 void EditorArea::compileCurFile()
 {
     Editor *editor = editors[currentIndex()];
+    isDebuging = false;
 
     if(!editor->getIsSave()) {
         emit createOutputInfo("文件未保存！\n");
         return;
     }
 
-    QProcess *process = new QProcess(this);
+    process = new QProcess(this);
     QString exeFilePath = QString(editor->getFileName()).replace(".c", ".exe");
 
     QString cmd = QDir::toNativeSeparators(tr("gcc %1 -o %2\n").arg(editor->getFileName()).arg(exeFilePath));
@@ -258,13 +278,14 @@ void EditorArea::compileCurFile()
 void EditorArea::runCurFile()
 {
     Editor *editor = editors[currentIndex()];
+    isDebuging = false;
 
     if(!editor->getIsAlreadyCompile()) {
         emit createOutputError("文件未编译，请先进行编译再运行！\r\n");
         return;
     }
 
-    QProcess *process = new QProcess(this);
+    process = new QProcess(this);
     QString cmd = QString(editor->getFileName() + "\n").replace(".c", ".exe");
     process->start(cmd);
     emit createOutputInfo("> " + cmd);
@@ -288,13 +309,14 @@ void EditorArea::runCurFile()
 void EditorArea::compileRunCurFile()
 {
     Editor *editor = editors[currentIndex()];
+    isDebuging = false;
 
     if(!editor->getIsSave()) {
-        emit createOutputInfo("文件未保存！");
+        emit createOutputInfo("文件未保存！\n");
         return;
     }
 
-    QProcess *process = new QProcess(this);
+    process = new QProcess(this);
     QString exeFilePath = QString(editor->getFileName()).replace(".c", ".exe");
 
     QString cmd = QDir::toNativeSeparators(tr("gcc %1 -o %2\n").arg(editor->getFileName()).arg(exeFilePath));
@@ -371,7 +393,7 @@ void EditorArea::startDebug(QVector<int> breakPointLines)
         return;
     }
 
-    QProcess *process = new QProcess(this);
+    process = new QProcess(this);
     QString exeFilePath = QString(editor->getFileName()).replace(".c", ".exe");
 
     QString cmd = QDir::toNativeSeparators(tr("gcc %1 -g -o %2\n").arg(editor->getFileName()).arg(exeFilePath));
@@ -391,13 +413,13 @@ void EditorArea::startDebug(QVector<int> breakPointLines)
     connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
             this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
         process->close();
-
+        isDebuging = true;
         debugProcess = new QProcess(this);
+        emit createOutputInfo("> 进入调试程序...\n");
         debugProcess->start(QString("gdb %1").arg(exeFilePath));
 
         connect(debugProcess, &QProcess::readyReadStandardOutput, this, [=]() {
             const QString output = QString::fromUtf8(debugProcess->readAllStandardOutput());
-            emit createOutputInfo(output);
 
             QString curRunLine;
             QVector<QPair<QString, QString> > varInfo;

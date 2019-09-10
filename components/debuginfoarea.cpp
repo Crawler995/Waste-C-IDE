@@ -18,7 +18,7 @@ DebugInfoArea::DebugInfoArea(QWidget *parent) : QWidget(parent)
 
     layout->addWidget(areaTitleLabel);
 
-    layout->addWidget(breakPointTreeView);
+    layout->addWidget(varInfoTreeView);
     layout->addStretch();
     layout->addWidget(buttonWidget);
 
@@ -120,9 +120,9 @@ void DebugInfoArea::initButtons()
 
 void DebugInfoArea::initBreakPointTreeView()
 {
-    breakPointTreeView = new QTreeView(this);
-    breakPointTreeView->setItemsExpandable(false);
-    breakPointTreeView->setStyleSheet("QTreeView{font-size: 16px;"
+    varInfoTreeView = new QTreeView(this);
+    varInfoTreeView->setItemsExpandable(false);
+    varInfoTreeView->setStyleSheet("QTreeView{font-size: 16px;"
                                       "background: transparent; outline: none;"
                                       "color: " + ColorBoard::lightGray + ";"
                                       "border: none;}"
@@ -132,13 +132,13 @@ void DebugInfoArea::initBreakPointTreeView()
                                       "color:" + ColorBoard::lightGray + ";"
                                       "background:" + ColorBoard::black1 + ";"
                                       "border: none; padding: 4px; font-size: 16px;}");
-    breakPointItemModel = new QStandardItemModel(breakPointTreeView);
+    varInfoItemModel = new QStandardItemModel(varInfoTreeView);
 
-    breakPointItemModel->setHorizontalHeaderLabels(QStringList()
+    varInfoItemModel->setHorizontalHeaderLabels(QStringList()
                                                    << QStringLiteral("变量")
                                                    << QStringLiteral("值"));
 
-    breakPointTreeView->setModel(breakPointItemModel);
+    varInfoTreeView->setModel(varInfoItemModel);
 }
 
 void DebugInfoArea::appendItem(const QString &name, const QString &value)
@@ -148,17 +148,26 @@ void DebugInfoArea::appendItem(const QString &name, const QString &value)
     QStandardItem *valueItem = new QStandardItem(value);
     breakPoint.append(nameItem);
     breakPoint.append(valueItem);
-    breakPointItemModel->appendRow(breakPoint);
+    varInfoItemModel->appendRow(breakPoint);
 }
 
 void DebugInfoArea::updateItemValue(const QString &name, const QString &value)
 {
     qDebug() << name << "=" << value;
-    for(int i = 0; i < breakPointItemModel->rowCount(); i++) {
-        QStandardItem *r = breakPointItemModel->item(i, 0);
+    for(int i = 0; i < varInfoItemModel->rowCount(); i++) {
+        QStandardItem *r = varInfoItemModel->item(i, 0);
         if(r->text() == name) {
             QStandardItem *v = new QStandardItem(value);
-            breakPointItemModel->setItem(i, 1, v);
+            varInfoItemModel->setItem(i, 1, v);
         }
     }
+}
+
+void DebugInfoArea::clearVarInfo()
+{
+    varInfoItemModel->clear();
+    varInfoItemModel->setHorizontalHeaderLabels(QStringList()
+                                                   << QStringLiteral("变量")
+                                                   << QStringLiteral("值"));
+    varInfoTreeView->setModel(varInfoItemModel);
 }

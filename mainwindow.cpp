@@ -220,6 +220,7 @@ void MainWindow::connectSignalAndSlot()
         workArea->getEditorArea()->executeGDBCommand("y");
         workArea->getEditorArea()->executeGDBCommand("quit");
         workArea->getEditorArea()->clearHighLightCurRunLine();
+        workArea->getDebugInfoArea()->clearVarInfo();
     });
     connect(workArea->getDebugInfoArea()->getSingleStepEnterButton(), &QPushButton::clicked,
             this, [=]() {
@@ -239,6 +240,11 @@ void MainWindow::connectSignalAndSlot()
         for(auto it = varInfo.constBegin(); it != varInfo.constEnd(); it++) {
             workArea->getDebugInfoArea()->updateItemValue((*it).first, (*it).second);
         }
+    });
+
+    connect(workArea->getRunOutputArea(), &RunOutputArea::userInputData,
+            this, [=](const QString &data) {
+        workArea->getEditorArea()->writeUserInputData(data);
     });
 }
 

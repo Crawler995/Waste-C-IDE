@@ -39,6 +39,8 @@ public:
 
     void parseGDBOutput(const QString &output, QString &curRunLine, QVector<QPair<QString, QString> > &varInfo);
 
+    void writeUserInputData(const QString &data);
+
 private:
     void initStyle();
     QString getCurEditorText();
@@ -46,7 +48,8 @@ private:
     QVector<Editor*> editors;
     QFont defaultFont;
 
-    QProcess *debugProcess;
+    QProcess *debugProcess, *process;
+    bool isDebuging;
 
     QList<QTextEdit::ExtraSelection> extraSelection;
 
