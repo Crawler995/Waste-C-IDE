@@ -338,6 +338,9 @@ int TextEdit::getCurLineStartTabNum()
 
 QString TextEdit::getStringAroundCursor(Dir dir, int length)
 {
+    if(dir == RIGHT && length == 1 && this->textCursor().position() == this->toPlainText().length()) {
+        return "\u0209";
+    }
     for(int i = 0; i < length; i++) {
         this->moveCursor(dir == LEFT ?
                              QTextCursor::PreviousCharacter :
