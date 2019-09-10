@@ -4,6 +4,7 @@
 #include <QInputDialog>
 #include <QVector>
 #include <QPair>
+#include <QStandardItemModel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -184,13 +185,13 @@ void MainWindow::connectSignalAndSlot()
         int col = cursor.columnNumber() + 1;
         int row = cursor.block().layout()->lineForTextPosition(col).lineNumber() +
                   cursor.block().firstLineNumber() + 1;
-        workArea->getDebugInfoArea()->addBreakPointLine(row);
+        workArea->getEditorArea()->addBreakPointLine(row);
 
         workArea->getEditorArea()->highLightBreakPointLine();
     });
     connect(workArea->getDebugInfoArea()->getDebugButton(), &QPushButton::clicked,
             this, [=]() {
-        workArea->getEditorArea()->startDebug(workArea->getDebugInfoArea()->getBreakPointLines());
+        workArea->getEditorArea()->startDebug();
     });
     connect(workArea->getDebugInfoArea()->getAddWatchButton(), &QPushButton::clicked,
             this, [=]() {
@@ -199,7 +200,7 @@ void MainWindow::connectSignalAndSlot()
         dialog.setLabelText("输入变量名");
         if(dialog.exec() == QInputDialog::Accepted) {
             workArea->getEditorArea()->executeGDBCommand("display " + dialog.textValue());
-            workArea->getDebugInfoArea()->appendItem(dialog.textValue(), "");
+            workArea->getEditorArea()->appendItem(dialog.textValue(), "");
         }
     });
     connect(workArea->getDebugInfoArea()->getNextStepButton(), &QPushButton::clicked,
@@ -220,7 +221,8 @@ void MainWindow::connectSignalAndSlot()
         workArea->getEditorArea()->executeGDBCommand("y");
         workArea->getEditorArea()->executeGDBCommand("quit");
         workArea->getEditorArea()->clearHighLightCurRunLine();
-        workArea->getDebugInfoArea()->clearVarInfo();
+        workArea->getEditorArea()->clearBreakPoints();
+        workArea->getEditorArea()->clearVarInfo();
     });
     connect(workArea->getDebugInfoArea()->getSingleStepEnterButton(), &QPushButton::clicked,
             this, [=]() {
@@ -235,16 +237,14 @@ void MainWindow::connectSignalAndSlot()
         workArea->getEditorArea()->executeGDBCommand("stepi");
     });
 
-    connect(workArea->getEditorArea(), &EditorArea::captureVarInfo,
-            this, [=](const QVector<QPair<QString, QString>> &varInfo) {
-        for(auto it = varInfo.constBegin(); it != varInfo.constEnd(); it++) {
-            workArea->getDebugInfoArea()->updateItemValue((*it).first, (*it).second);
-        }
-    });
-
     connect(workArea->getRunOutputArea(), &RunOutputArea::userInputData,
             this, [=](const QString &data) {
         workArea->getEditorArea()->writeUserInputData(data);
+    });
+
+    connect(workArea->getEditorArea(), &EditorArea::varInfoModelUpdated,
+            this, [=](QStandardItemModel *model) {
+        workArea->getDebugInfoArea()->setModel(model);
     });
 }
 

@@ -27,6 +27,13 @@ EditorArea::EditorArea(QWidget *parent) : QTabWidget(parent)
             this, [=](int index) {
         this->removeTab(index);
     });
+    connect(this, &QTabWidget::currentChanged,
+            this, [=](int index) {
+        if(index != -1) {
+            emit varInfoModelUpdated(editors[index]->getVarInfoItemModel());
+        }
+
+    });
 
     debugProcess = process = nullptr;
     isDebuging = false;
@@ -60,14 +67,15 @@ void EditorArea::highLightBreakPointLine()
     selection.cursor = getCurEditor()->textCursor();
     selection.cursor.clearSelection();
 
-    extraSelection.append(selection);
-    getCurEditor()->setExtraSelections(extraSelection);
+    editors[currentIndex()]->extraSelection.append(selection);
+    getCurEditor()->setExtraSelections(editors[currentIndex()]->extraSelection);
 }
 
 void EditorArea::highLightCurRunLine(int line)
 {
     bool have = false;
-    for (auto it = extraSelection.begin(); it != extraSelection.end(); it++) {
+    //auto extraSelection = editors[currentIndex()]->extraSelection;
+    for (auto it = editors[currentIndex()]->extraSelection.begin(); it != editors[currentIndex()]->extraSelection.end(); it++) {
         if((*it).format.background() == QBrush(QColor(0, 0, 255, 60))) {
             (*it).cursor = QTextCursor(getCurEditor()->document()->findBlockByLineNumber(line - 1));
             (*it).cursor.clearSelection();
@@ -80,23 +88,45 @@ void EditorArea::highLightCurRunLine(int line)
         selection.format.setProperty(QTextFormat::FullWidthSelection,true);
         selection.cursor = QTextCursor(getCurEditor()->document()->findBlockByLineNumber(line - 1));
         selection.cursor.clearSelection();
-        extraSelection.append(selection);
+        editors[currentIndex()]->extraSelection.append(selection);
     }
-    getCurEditor()->setExtraSelections(extraSelection);
+    getCurEditor()->setExtraSelections(editors[currentIndex()]->extraSelection);
+}
+
+void EditorArea::clearVarInfo()
+{
+    editors[currentIndex()]->clearVarInfo();
+    emit varInfoModelUpdated(editors[currentIndex()]->getVarInfoItemModel());
+}
+
+void EditorArea::appendItem(const QString &name, const QString &value)
+{
+    editors[currentIndex()]->appendItem(name, value);
+    emit varInfoModelUpdated(editors[currentIndex()]->getVarInfoItemModel());
+}
+
+void EditorArea::addBreakPointLine(int line)
+{
+    editors[currentIndex()]->addBreakPointLine(line);
 }
 
 void EditorArea::clearHighLightCurRunLine()
 {
     int index;
-    for (auto it = extraSelection.begin(); it != extraSelection.end(); it++) {
+    for (auto it = editors[currentIndex()]->extraSelection.begin(); it != editors[currentIndex()]->extraSelection.end(); it++) {
         if((*it).format.background() == QBrush(QColor(0, 0, 255, 60))) {
-            index = it - extraSelection.begin();
+            index = it - editors[currentIndex()]->extraSelection.begin();
             break;
         }
     }
 
-    extraSelection.removeAt(index);
-    getCurEditor()->setExtraSelections(extraSelection);
+    editors[currentIndex()]->extraSelection.clear();
+    getCurEditor()->setExtraSelections(editors[currentIndex()]->extraSelection);
+}
+
+void EditorArea::clearBreakPoints()
+{
+    editors[currentIndex()]->setBreakPointLines(QVector<int>());
 }
 
 void EditorArea::parseGDBOutput(const QString &output, QString &curRunLine,
@@ -381,9 +411,13 @@ void EditorArea::openSettingDialog()
 void EditorArea::executeGDBCommand(const QString &command)
 {
     debugProcess->write(QString(command + '\n').toStdString().c_str());
+
+    if(command == "quit") {
+        emit createOutputInfo("调试结束。\n");
+    }
 }
 
-void EditorArea::startDebug(QVector<int> breakPointLines)
+void EditorArea::startDebug()
 {
     qDebug() << "debug";
     Editor *editor = editors[currentIndex()];
@@ -429,10 +463,13 @@ void EditorArea::startDebug(QVector<int> breakPointLines)
                 highLightCurRunLine(curRunLine.toInt());
             }
             if(!varInfo.empty()) {
-                emit captureVarInfo(varInfo);
+                for(auto it = varInfo.constBegin(); it != varInfo.constEnd(); it++) {
+                    editors[this->currentIndex()]->updateItemValue((*it).first, (*it).second);
+                }
             }
         });
 
+        auto breakPointLines = editors[this->currentIndex()]->getBreakPointLines();
         foreach (int line, breakPointLines) {
             executeGDBCommand(QString("break %1").arg(line));
         }

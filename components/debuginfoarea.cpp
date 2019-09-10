@@ -25,9 +25,9 @@ DebugInfoArea::DebugInfoArea(QWidget *parent) : QWidget(parent)
     setLayout(layout);
 }
 
-void DebugInfoArea::addBreakPointLine(int line)
+void DebugInfoArea::setModel(QStandardItemModel *model)
 {
-    breakPointLines.append(line);
+    varInfoTreeView->setModel(model);
 }
 
 ActionButton *DebugInfoArea::getDebugButton() const
@@ -38,11 +38,6 @@ ActionButton *DebugInfoArea::getDebugButton() const
 ActionButton *DebugInfoArea::getAddBreakPointButton() const
 {
     return addBreakPointButton;
-}
-
-QVector<int> DebugInfoArea::getBreakPointLines() const
-{
-    return breakPointLines;
 }
 
 ActionButton *DebugInfoArea::getAddWatchButton() const
@@ -132,42 +127,4 @@ void DebugInfoArea::initBreakPointTreeView()
                                       "color:" + ColorBoard::lightGray + ";"
                                       "background:" + ColorBoard::black1 + ";"
                                       "border: none; padding: 4px; font-size: 16px;}");
-    varInfoItemModel = new QStandardItemModel(varInfoTreeView);
-
-    varInfoItemModel->setHorizontalHeaderLabels(QStringList()
-                                                   << QStringLiteral("变量")
-                                                   << QStringLiteral("值"));
-
-    varInfoTreeView->setModel(varInfoItemModel);
-}
-
-void DebugInfoArea::appendItem(const QString &name, const QString &value)
-{
-    QList<QStandardItem*> breakPoint;
-    QStandardItem *nameItem = new QStandardItem(name);
-    QStandardItem *valueItem = new QStandardItem(value);
-    breakPoint.append(nameItem);
-    breakPoint.append(valueItem);
-    varInfoItemModel->appendRow(breakPoint);
-}
-
-void DebugInfoArea::updateItemValue(const QString &name, const QString &value)
-{
-    qDebug() << name << "=" << value;
-    for(int i = 0; i < varInfoItemModel->rowCount(); i++) {
-        QStandardItem *r = varInfoItemModel->item(i, 0);
-        if(r->text() == name) {
-            QStandardItem *v = new QStandardItem(value);
-            varInfoItemModel->setItem(i, 1, v);
-        }
-    }
-}
-
-void DebugInfoArea::clearVarInfo()
-{
-    varInfoItemModel->clear();
-    varInfoItemModel->setHorizontalHeaderLabels(QStringList()
-                                                   << QStringLiteral("变量")
-                                                   << QStringLiteral("值"));
-    varInfoTreeView->setModel(varInfoItemModel);
 }

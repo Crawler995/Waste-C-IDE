@@ -29,13 +29,17 @@ public:
     void openSettingDialog();
 
     void executeGDBCommand(const QString &command);
-    void startDebug(QVector<int> breakPointLines);
+    void startDebug();
 
     QFont getDefaultFont() const;
 
     void highLightBreakPointLine();
     void highLightCurRunLine(int line);
+    void clearVarInfo();
+    void appendItem(const QString &name, const QString &value);
+    void addBreakPointLine(int line);
     void clearHighLightCurRunLine();
+    void clearBreakPoints();
 
     void parseGDBOutput(const QString &output, QString &curRunLine, QVector<QPair<QString, QString> > &varInfo);
 
@@ -51,7 +55,6 @@ private:
     QProcess *debugProcess, *process;
     bool isDebuging;
 
-    QList<QTextEdit::ExtraSelection> extraSelection;
 
 signals:
     void cursorPositionChangedWithPos(int row, int col, int totalRowNum);
@@ -59,6 +62,7 @@ signals:
     void createOutputError(const QString &error);
 
     void captureVarInfo(const QVector<QPair<QString, QString> > &varInfo);
+    void varInfoModelUpdated(QStandardItemModel *model);
 };
 
 #endif // EDITORAREA_H

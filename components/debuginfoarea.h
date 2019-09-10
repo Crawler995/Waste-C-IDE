@@ -16,16 +16,11 @@ class DebugInfoArea : public QWidget
     Q_OBJECT
 public:
     explicit DebugInfoArea(QWidget *parent = 0);
-    void addBreakPointLine(int line);
-    void appendItem(const QString &name, const QString &value);
-    void updateItemValue(const QString &name, const QString &value);
-    void clearVarInfo();
+    void setModel(QStandardItemModel *model);
 
     ActionButton *getDebugButton() const;
 
     ActionButton *getAddBreakPointButton() const;
-
-    QVector<int> getBreakPointLines() const;
 
     ActionButton *getAddWatchButton() const;
 
@@ -56,9 +51,6 @@ private:
         *jumpFuncButton, *enterSentenceButton;
 
     QTreeView *varInfoTreeView;
-    QStandardItemModel *varInfoItemModel;
-
-    QVector<int> breakPointLines;
 
     void initButtons();
     void initBreakPointTreeView();

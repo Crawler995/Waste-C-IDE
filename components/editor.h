@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include <QHBoxLayout>
 #include <QVector>
+#include <QStandardItemModel>
 #include "../features/cpphighlighter.h"
 #include "../features/ccompleter.h"
 #include "textedit.h"
@@ -30,6 +31,19 @@ public:
     void replaceWordAndHighLight(const QString &word, const QString &target, bool isRegex, bool isCaseSensitive);
     void clearHighLightOfFoundWord();
 
+    void addBreakPointLine(int line);
+    void appendItem(const QString &name, const QString &value);
+    void updateItemValue(const QString &name, const QString &value);
+    void clearVarInfo();
+
+    QStandardItemModel *getVarInfoItemModel() const;
+
+    QVector<int> getBreakPointLines() const;
+
+    QList<QTextEdit::ExtraSelection> extraSelection;
+
+    void setBreakPointLines(const QVector<int> &value);
+
 private:
     TextEdit *textEdit;
     QHBoxLayout *layout;
@@ -39,6 +53,11 @@ private:
     bool isAlreadyCompile;
 
     QVector<int> indexes;
+
+    QStandardItemModel *varInfoItemModel;
+    QVector<int> breakPointLines;
+
+    void initModel();
 };
 
 #endif // EDITOR_H

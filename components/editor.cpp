@@ -30,6 +30,8 @@ Editor::Editor(QWidget *parent) : QWidget(parent)
     });
 
     isSave = true;
+
+    initModel();
 }
 
 TextEdit *Editor::getTextEdit() const
@@ -192,4 +194,63 @@ void Editor::clearHighLightOfFoundWord()
     this->textEdit->setTextCursor(initCursor);
 
     indexes.clear();
+}
+
+void Editor::addBreakPointLine(int line)
+{
+    breakPointLines.append(line);
+}
+
+void Editor::appendItem(const QString &name, const QString &value)
+{
+    QList<QStandardItem*> breakPoint;
+    QStandardItem *nameItem = new QStandardItem(name);
+    QStandardItem *valueItem = new QStandardItem(value);
+    breakPoint.append(nameItem);
+    breakPoint.append(valueItem);
+    varInfoItemModel->appendRow(breakPoint);
+}
+
+void Editor::updateItemValue(const QString &name, const QString &value)
+{
+    qDebug() << name << "=" << value;
+    for(int i = 0; i < varInfoItemModel->rowCount(); i++) {
+        QStandardItem *r = varInfoItemModel->item(i, 0);
+        if(r->text() == name) {
+            QStandardItem *v = new QStandardItem(value);
+            varInfoItemModel->setItem(i, 1, v);
+        }
+    }
+}
+
+void Editor::clearVarInfo()
+{
+    varInfoItemModel->clear();
+    varInfoItemModel->setHorizontalHeaderLabels(QStringList()
+                                                   << QStringLiteral("变量")
+                                                   << QStringLiteral("值"));
+}
+
+QStandardItemModel *Editor::getVarInfoItemModel() const
+{
+    return varInfoItemModel;
+}
+
+QVector<int> Editor::getBreakPointLines() const
+{
+    return breakPointLines;
+}
+
+void Editor::setBreakPointLines(const QVector<int> &value)
+{
+    breakPointLines = value;
+}
+
+void Editor::initModel()
+{
+    varInfoItemModel = new QStandardItemModel(this);
+
+    varInfoItemModel->setHorizontalHeaderLabels(QStringList()
+                                                   << QStringLiteral("变量")
+                                                   << QStringLiteral("值"));
 }
