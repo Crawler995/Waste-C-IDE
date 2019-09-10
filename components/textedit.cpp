@@ -49,6 +49,8 @@ TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent)
                + completer->popup()->verticalScrollBar()->sizeHint().width());
         completer->complete(cr);
     });
+
+    matchBracketCursor = QTextCursor();
 }
 
 void TextEdit::setFont(const QFont &font)
@@ -99,8 +101,12 @@ void TextEdit::highLightMatchBracketFromLeft(QChar left, QChar right)
     }
 
     if(find) {
+        matchBracketCursor = this->textCursor();
         this->moveCursor(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
         this->textCursor().mergeCharFormat(format);
+    }
+    else {
+        matchBracketCursor = QTextCursor();
     }
 
     this->setTextCursor(initCursor);
@@ -136,8 +142,12 @@ void TextEdit::highLightMatchBracketFromRight(QChar left, QChar right)
     }
 
     if(find) {
+        matchBracketCursor = this->textCursor();
         this->moveCursor(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
         this->textCursor().mergeCharFormat(format);
+    }
+    else {
+        matchBracketCursor = QTextCursor();
     }
 
     this->setTextCursor(initCursor);
@@ -145,15 +155,13 @@ void TextEdit::highLightMatchBracketFromRight(QChar left, QChar right)
 
 void TextEdit::clearMatchBracketHighLight()
 {
-    QTextCursor cursor = this->textCursor(), initCursor = cursor;
     QTextCharFormat format;
     format.setBackground(QColor(0, 0, 0, 0));
 
-    cursor.movePosition(QTextCursor::Start);
-    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
-    cursor.mergeCharFormat(format);
+    matchBracketCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+    matchBracketCursor.mergeCharFormat(format);
 
-    this->setTextCursor(initCursor);
+    matchBracketCursor = QTextCursor();
 }
 
 void TextEdit::keyPressEvent(QKeyEvent *event)
@@ -290,7 +298,10 @@ bool TextEdit::event(QEvent *e)
 void TextEdit::mousePressEvent(QMouseEvent *event)
 {
     QTextEdit::mousePressEvent(event);
-    clearMatchBracketHighLight();
+
+    if(matchBracketCursor != QTextCursor()) {
+        clearMatchBracketHighLight();
+    }
 
     if(event->button() == Qt::LeftButton) {
         QTextCursor cursor = cursorForPosition(event->pos());

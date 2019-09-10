@@ -29,6 +29,8 @@ private:
 
     CPPHighLighter *highLighter;
     CCompleter *completer;
+
+    QTextCursor matchBracketCursor;
 };
 
 #endif // TEXTEDIT_H
