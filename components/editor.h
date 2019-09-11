@@ -9,6 +9,7 @@
 #include "../features/cpphighlighter.h"
 #include "../features/ccompleter.h"
 #include "textedit.h"
+#include "../features/commentmanager.h"
 
 class Editor : public QWidget
 {
@@ -44,6 +45,8 @@ public:
 
     void setBreakPointLines(const QVector<int> &value);
 
+    CommentManager *getCommentManager() const;
+
 private:
     TextEdit *textEdit;
     QHBoxLayout *layout;
@@ -56,6 +59,8 @@ private:
 
     QStandardItemModel *varInfoItemModel;
     QVector<int> breakPointLines;
+
+    CommentManager *commentManager;
 
     void initModel();
 };

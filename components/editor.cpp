@@ -30,6 +30,7 @@ Editor::Editor(QWidget *parent) : QWidget(parent)
     });
 
     isSave = true;
+    commentManager = new CommentManager(textEdit);
 
     initModel();
 }
@@ -244,6 +245,11 @@ QVector<int> Editor::getBreakPointLines() const
 void Editor::setBreakPointLines(const QVector<int> &value)
 {
     breakPointLines = value;
+}
+
+CommentManager *Editor::getCommentManager() const
+{
+    return commentManager;
 }
 
 void Editor::initModel()

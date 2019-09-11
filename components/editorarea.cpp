@@ -171,6 +171,17 @@ void EditorArea::writeUserInputData(const QString &data)
     }
 }
 
+void EditorArea::manageComment()
+{
+    CommentManager *commentManager = editors[currentIndex()]->getCommentManager();
+    if(!commentManager->getIsHide()) {
+        commentManager->hideAllComment();
+    }
+    else {
+        commentManager->showAllComment();
+    }
+}
+
 void EditorArea::createEditor()
 {
     if(qobject_cast<WelcomePage*>(this->currentWidget())) {

@@ -45,6 +45,8 @@ public:
 
     void writeUserInputData(const QString &data);
 
+    void manageComment();
+
 private:
     void initStyle();
     QString getCurEditorText();

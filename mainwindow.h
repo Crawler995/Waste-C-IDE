@@ -34,7 +34,7 @@ private:
     QAction *newFileAction, *newFileWithTempAction, *openFileAction, *saveFileAction;
 
     QMenu *editMenu;
-    QAction *findReplaceAction;
+    QAction *findReplaceAction, *manageCommentAction;
 
     QMenu *runMenu;
     QAction *compileAction, *runAction, *compileRunAction, *debugAction;

@@ -47,6 +47,8 @@ void MainWindow::createMenu() {
 
     editMenu = mainMenuBar->addMenu(tr("编辑"));
     findReplaceAction = editMenu->addAction(tr("查找/替换"));
+    manageCommentAction = editMenu->addAction(tr("显示/隐藏注释"));
+    manageCommentAction->setShortcut(QKeySequence(QLatin1String("Ctrl+H")));
 
     runMenu = mainMenuBar->addMenu(tr("运行"));
     compileAction = runMenu->addAction(tr("编译"));
@@ -143,6 +145,10 @@ void MainWindow::connectSignalAndSlot()
     connect(findReplaceAction, &QAction::triggered,
             this, [=]() {
         workArea->getEditorArea()->findWord();
+    });
+    connect(manageCommentAction, QAction::triggered,
+            this, [=]() {
+        workArea->getEditorArea()->manageComment();
     });
 
     connect(compileAction, &QAction::triggered,
