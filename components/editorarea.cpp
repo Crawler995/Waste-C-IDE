@@ -208,7 +208,8 @@ void EditorArea::createEditor()
 void EditorArea::createEditorWithTemp()
 {
     createEditor();
-    editors[this->currentIndex()]->getTextEdit()->insertPlainText("#include <stdio.h>");
+    const QString mainString = "#include <stdio.h>\r\n\r\nint main(int argc, char **argv) {\r\n\t\r\n}";
+    editors[this->currentIndex()]->getTextEdit()->insertPlainText(mainString);
 }
 
 void EditorArea::saveCurEditorToFile()

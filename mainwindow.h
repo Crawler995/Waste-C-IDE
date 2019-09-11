@@ -40,15 +40,12 @@ private:
     QAction *compileAction, *runAction, *compileRunAction, *debugAction;
 
     QMenu *settingMenu;
-    QAction *editorSettingAction, *fullScreenAction;
+    QAction *editorSettingAction;
 
     QStatusBar *mainStatusBar;
     QLabel *cursorPositionLabel, *totalLineNumLabel;
 
     WorkArea *workArea;
-
-private slots:
-
 };
 
 #endif // MAINWINDOW_H
