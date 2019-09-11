@@ -262,14 +262,16 @@ void EditorArea::findWord()
             this, [=]() {
         editors[this->currentIndex()]->findWordAndHighLight(dialog->getInputWordEdit()->text(),
                                                             dialog->getIsRegexMatch(),
-                                                            dialog->getIsCaseSensitive());
+                                                            dialog->getIsCaseSensitive(),
+                                                            dialog->getIsMinimal());
     });
     connect(dialog->getReplaceButton(), &QPushButton::clicked,
             this, [=]() {
         editors[this->currentIndex()]->replaceWordAndHighLight(dialog->getInputWordEdit()->text(),
                                                                dialog->getTargetWordEdit()->text(),
                                                                dialog->getIsRegexMatch(),
-                                                               dialog->getIsCaseSensitive());
+                                                               dialog->getIsCaseSensitive(),
+                                                               dialog->getIsMinimal());
     });
 
     connect(dialog, &QWidget::destroyed,

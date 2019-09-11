@@ -47,6 +47,7 @@ void MainWindow::createMenu() {
 
     editMenu = mainMenuBar->addMenu(tr("编辑"));
     findReplaceAction = editMenu->addAction(tr("查找/替换"));
+    findReplaceAction->setShortcut(QKeySequence(QLatin1String("Ctrl+F")));
     manageCommentAction = editMenu->addAction(tr("显示/隐藏注释"));
     manageCommentAction->setShortcut(QKeySequence(QLatin1String("Ctrl+H")));
 

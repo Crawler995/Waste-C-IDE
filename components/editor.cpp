@@ -70,7 +70,7 @@ void Editor::setIsAlreadyCompile(bool value)
     isAlreadyCompile = value;
 }
 
-void Editor::findWordAndHighLight(const QString &word, bool isRegex, bool isCaseSensitive)
+void Editor::findWordAndHighLight(const QString &word, bool isRegex, bool isCaseSensitive, bool isMinimal)
 {
     if(!indexes.empty()) {
         clearHighLightOfFoundWord();
@@ -82,7 +82,7 @@ void Editor::findWordAndHighLight(const QString &word, bool isRegex, bool isCase
 
     if(isRegex) {
         QRegExp regx(word);
-        regx.setMinimal(true);
+        regx.setMinimal(isMinimal);
         regx.setCaseSensitivity(Qt::CaseSensitivity(isCaseSensitive));
         int pos = 0;
         const QString textEditText = this->textEdit->toPlainText();
@@ -123,7 +123,8 @@ void Editor::findWordAndHighLight(const QString &word, bool isRegex, bool isCase
     this->textEdit->setTextCursor(initCursor);
 }
 
-void Editor::replaceWordAndHighLight(const QString &word, const QString &target, bool isRegex, bool isCaseSensitive)
+void Editor::replaceWordAndHighLight(const QString &word, const QString &target, bool isRegex,
+                                     bool isCaseSensitive, bool isMinimal)
 {
     if(!indexes.empty()) {
         clearHighLightOfFoundWord();
@@ -135,7 +136,7 @@ void Editor::replaceWordAndHighLight(const QString &word, const QString &target,
 
     if(isRegex) {
         QRegExp regx(word);
-        regx.setMinimal(true);
+        regx.setMinimal(isMinimal);
         regx.setCaseSensitivity(Qt::CaseSensitivity(isCaseSensitive));
         int pos = 0;
         QString textEditText = this->textEdit->toPlainText();

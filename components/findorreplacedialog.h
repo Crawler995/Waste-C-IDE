@@ -23,12 +23,14 @@ public:
 
     bool getIsRegexMatch();
     bool getIsCaseSensitive();
+    bool getIsMinimal();
 
 private:
     QLineEdit *inputWordEdit;
     QLineEdit *targetWordEdit;
     QCheckBox *isRegexMatchCheckBox;
     QCheckBox *isCaseSensitiveCheckBox;
+    QCheckBox *isMinimalCheckBox;
     QPushButton *findButton;
     QPushButton *replaceButton;
 

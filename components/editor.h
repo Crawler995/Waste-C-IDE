@@ -28,8 +28,10 @@ public:
     bool getIsAlreadyCompile() const;
     void setIsAlreadyCompile(bool value);
 
-    void findWordAndHighLight(const QString &word, bool isRegex, bool isCaseSensitive);
-    void replaceWordAndHighLight(const QString &word, const QString &target, bool isRegex, bool isCaseSensitive);
+    void findWordAndHighLight(const QString &word, bool isRegex, bool isCaseSensitive,
+                              bool isMinimal);
+    void replaceWordAndHighLight(const QString &word, const QString &target, bool isRegex,
+                                 bool isCaseSensitive, bool isMinimal);
     void clearHighLightOfFoundWord();
 
     void addBreakPointLine(int line);

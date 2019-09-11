@@ -11,6 +11,7 @@ FindOrReplaceDialog::FindOrReplaceDialog(QWidget *parent) : QWidget(parent)
 
     isRegexMatchCheckBox = new QCheckBox("使用正则表达式", this);
     isCaseSensitiveCheckBox = new QCheckBox("大小写敏感", this);
+    isMinimalCheckBox = new QCheckBox("是否非贪婪匹配", this);
 
     findButton = new QPushButton("查找", this);
     replaceButton = new QPushButton("替换", this);
@@ -19,8 +20,9 @@ FindOrReplaceDialog::FindOrReplaceDialog(QWidget *parent) : QWidget(parent)
     layout->addWidget(targetWordEdit, 1, 0, 1, 2);
     layout->addWidget(isRegexMatchCheckBox, 2, 0, 1, 1);
     layout->addWidget(isCaseSensitiveCheckBox, 2, 1, 1, 1);
-    layout->addWidget(findButton, 3, 0, 1, 1);
-    layout->addWidget(replaceButton, 3, 1, 1, 1);
+    layout->addWidget(isMinimalCheckBox, 3, 0, 1, 1);
+    layout->addWidget(findButton, 4, 0, 1, 1);
+    layout->addWidget(replaceButton, 4, 1, 1, 1);
 
     setLayout(layout);
 
@@ -55,4 +57,9 @@ bool FindOrReplaceDialog::getIsRegexMatch()
 bool FindOrReplaceDialog::getIsCaseSensitive()
 {
     return isCaseSensitiveCheckBox->isChecked();
+}
+
+bool FindOrReplaceDialog::getIsMinimal()
+{
+    return isMinimalCheckBox->isChecked();
 }
