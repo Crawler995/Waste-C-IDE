@@ -173,6 +173,9 @@ void EditorArea::writeUserInputData(const QString &data)
 
 void EditorArea::manageComment()
 {
+    if(!confirmOperationWithOpenFile()) {
+        return;
+    }
     CommentManager *commentManager = editors[currentIndex()]->getCommentManager();
     if(!commentManager->getIsHide()) {
         commentManager->hideAllComment();
@@ -180,6 +183,18 @@ void EditorArea::manageComment()
     else {
         commentManager->showAllComment();
     }
+}
+
+bool EditorArea::confirmOperationWithOpenFile()
+{
+    if(this->count() == 0 || qobject_cast<WelcomePage*>(this->currentWidget())) {
+        QMessageBox box;
+        box.setIcon(QMessageBox::Critical);
+        box.setText("当前无打开文件！");
+        box.exec();
+        return false;
+    }
+    return true;
 }
 
 void EditorArea::createEditor()
@@ -214,11 +229,7 @@ void EditorArea::createEditorWithTemp()
 
 void EditorArea::saveCurEditorToFile()
 {
-    if(this->count() == 0 || qobject_cast<WelcomePage*>(this->currentWidget())) {
-        QMessageBox box;
-        box.setIcon(QMessageBox::Critical);
-        box.setText("当前无打开文件！");
-        box.exec();
+    if(!confirmOperationWithOpenFile()) {
         return;
     }
 
@@ -248,11 +259,7 @@ void EditorArea::saveCurEditorToFile()
 
 void EditorArea::findWord()
 {
-    if(this->count() == 0 || qobject_cast<WelcomePage*>(this->currentWidget())) {
-        QMessageBox box;
-        box.setIcon(QMessageBox::Critical);
-        box.setText("当前无打开文件！");
-        box.exec();
+    if(!confirmOperationWithOpenFile()) {
         return;
     }
 
@@ -285,6 +292,10 @@ void EditorArea::findWord()
 
 void EditorArea::compileCurFile()
 {
+    if(!confirmOperationWithOpenFile()) {
+        return;
+    }
+
     Editor *editor = editors[currentIndex()];
     isDebuging = false;
 
@@ -321,6 +332,10 @@ void EditorArea::compileCurFile()
 
 void EditorArea::runCurFile()
 {
+    if(!confirmOperationWithOpenFile()) {
+        return;
+    }
+
     Editor *editor = editors[currentIndex()];
     isDebuging = false;
 
@@ -352,6 +367,10 @@ void EditorArea::runCurFile()
 
 void EditorArea::compileRunCurFile()
 {
+    if(!confirmOperationWithOpenFile()) {
+        return;
+    }
+
     Editor *editor = editors[currentIndex()];
     isDebuging = false;
 

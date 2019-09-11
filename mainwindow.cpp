@@ -189,6 +189,10 @@ void MainWindow::connectSignalAndSlot()
     // debug
     connect(workArea->getDebugInfoArea()->getAddBreakPointButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
+
         QTextCursor cursor = workArea->getEditorArea()->getCurEditor()->textCursor();
         int col = cursor.columnNumber() + 1;
         int row = cursor.block().layout()->lineForTextPosition(col).lineNumber() +
@@ -199,10 +203,16 @@ void MainWindow::connectSignalAndSlot()
     });
     connect(workArea->getDebugInfoArea()->getDebugButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         workArea->getEditorArea()->startDebug();
     });
     connect(workArea->getDebugInfoArea()->getAddWatchButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         QInputDialog dialog;
         dialog.setWindowTitle("添加查看");
         dialog.setLabelText("输入变量名");
@@ -213,18 +223,30 @@ void MainWindow::connectSignalAndSlot()
     });
     connect(workArea->getDebugInfoArea()->getNextStepButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         workArea->getEditorArea()->executeGDBCommand("next");
     });
     connect(workArea->getDebugInfoArea()->getJumpButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         workArea->getEditorArea()->executeGDBCommand("continue");
     });
     connect(workArea->getDebugInfoArea()->getNextSentenceButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         workArea->getEditorArea()->executeGDBCommand("nexti");
     });
     connect(workArea->getDebugInfoArea()->getStopButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         workArea->getEditorArea()->executeGDBCommand("kill");
         workArea->getEditorArea()->executeGDBCommand("y");
         workArea->getEditorArea()->executeGDBCommand("quit");
@@ -234,19 +256,31 @@ void MainWindow::connectSignalAndSlot()
     });
     connect(workArea->getDebugInfoArea()->getSingleStepEnterButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         workArea->getEditorArea()->executeGDBCommand("step");
     });
     connect(workArea->getDebugInfoArea()->getJumpFuncButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         workArea->getEditorArea()->executeGDBCommand("finish");
     });
     connect(workArea->getDebugInfoArea()->getEnterSentenceButton(), &QPushButton::clicked,
             this, [=]() {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         workArea->getEditorArea()->executeGDBCommand("stepi");
     });
 
     connect(workArea->getRunOutputArea(), &RunOutputArea::userInputData,
             this, [=](const QString &data) {
+        if(!workArea->getEditorArea()->confirmOperationWithOpenFile()) {
+            return;
+        }
         workArea->getEditorArea()->writeUserInputData(data);
     });
 

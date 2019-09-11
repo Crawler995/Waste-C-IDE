@@ -47,6 +47,8 @@ public:
 
     void manageComment();
 
+    bool confirmOperationWithOpenFile();
+
 private:
     void initStyle();
     QString getCurEditorText();
