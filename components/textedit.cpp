@@ -194,6 +194,16 @@ void TextEdit::keyPressEvent(QKeyEvent *event)
         this->moveCursor(QTextCursor::PreviousCharacter);
     }
 
+    else if(event->key() == ' ') {
+        QTextCursor cursor = this->textCursor();
+        cursor.movePosition(QTextCursor::PreviousWord, QTextCursor::KeepAnchor);
+        QString str = cursor.selectedText();
+
+        QRegExp regx("^[a-zA-Z0-9_]+$");
+        if(regx.indexIn(str) == 0 && regx.matchedLength() == str.length()) {
+            this->completer->addCompleteItem(str);
+        }
+    }
 
     else if(event->key() == Qt::Key_Return) {
         if(completer && completer->popup()->isVisible()) {
