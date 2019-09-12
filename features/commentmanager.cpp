@@ -36,6 +36,7 @@ void CommentManager::updateComment()
     comments.clear();
     QRegExp singleLineCommentRegx("//[^\n]*");
     QRegExp multLineCommentRegx("/\\*.*\\*/");
+    multLineCommentRegx.setMinimal(true);
     findLineComment(singleLineCommentRegx);
     findLineComment(multLineCommentRegx);
 }
