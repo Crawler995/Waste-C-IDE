@@ -12,7 +12,7 @@ Editor::Editor(QWidget *parent) : QWidget(parent)
 {
     setStyleSheet("background: " + ColorBoard::black3 + "; border: none;"
                   "color: " + ColorBoard::normalTextLightYellow + ";"
-                  "padding-left: 10px;");
+                  "padding-left: 0px;");
 
     layout = new QHBoxLayout(this);
     textEdit = new TextEdit(this);
