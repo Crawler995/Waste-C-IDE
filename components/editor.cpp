@@ -152,7 +152,7 @@ void Editor::replaceWordAndHighLight(const QString &word, const QString &target,
             cursor.removeSelectedText();
             cursor.insertText(target, format);
 
-            pos = index + regx.matchedLength();
+            pos = index + target.length();
             textEditText = this->textEdit->toPlainText();
 
             index = regx.indexIn(textEditText, pos);
