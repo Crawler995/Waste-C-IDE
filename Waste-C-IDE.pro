@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     features/ccompleter.cpp \
     components/textedit.cpp \
     components/findorreplacedialog.cpp \
-    features/commentmanager.cpp
+    features/commentmanager.cpp \
+    features/gitmanager.cpp
 
 HEADERS  += mainwindow.h \
     features/config.h \
@@ -52,4 +53,5 @@ HEADERS  += mainwindow.h \
     features/ccompleter.h \
     components/textedit.h \
     components/findorreplacedialog.h \
-    features/commentmanager.h
+    features/commentmanager.h \
+    features/gitmanager.h

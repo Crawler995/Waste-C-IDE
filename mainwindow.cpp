@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     initStyle();
 
+    gitManager = new GitManager(this);
+
     connectSignalAndSlot();
 }
 
@@ -59,6 +61,15 @@ void MainWindow::createMenu() {
 
     settingMenu = mainMenuBar->addMenu(tr("设置"));
     editorSettingAction = settingMenu->addAction(tr("编辑器设置"));
+
+    gitMenu = mainMenuBar->addMenu(tr("Git管理"));
+    gitInitAction = gitMenu->addAction(tr("init"));
+    addMenu = gitMenu->addMenu(tr("add..."));
+    addCurFileAction = addMenu->addAction(tr("add <this file>"));
+    addAllFileInFolderAction = addMenu->addAction(tr("add <all file in this folder>"));
+    checkoutMenu = gitMenu->addMenu(tr("checkout -- ...（撤销暂存区修改）"));
+    checkoutCurFileAction = checkoutMenu->addAction(tr("checkout -- <this file>"));
+    checkoutAllFileInFolderAction = checkoutMenu->addAction(tr("checkout -- <all file in this folder>"));
 }
 
 void MainWindow::createStatusBar()
@@ -288,5 +299,36 @@ void MainWindow::connectSignalAndSlot()
             this, [=](QStandardItemModel *model) {
         workArea->getDebugInfoArea()->setModel(model);
     });
+
+    connect(gitManager, &GitManager::createOutputInfo,
+            workArea->getRunOutputArea(), &RunOutputArea::outputInfo);
+    connect(gitManager, &GitManager::createOutputError,
+            workArea->getRunOutputArea(), &RunOutputArea::outputError);
+
+    connect(gitInitAction, &QAction::triggered,
+            this, [=]() {
+        gitManager->gitInit();
+    });
+    connect(addCurFileAction, &QAction::triggered,
+            this, [=]() {
+        gitManager->gitAddCurFile();
+    });
+    connect(checkoutCurFileAction, &QAction::triggered,
+            this, [=]() {
+        gitManager->checkoutCurFile();
+    });
+    connect(checkoutAllFileInFolderAction, &QAction::triggered,
+            this, [=]() {
+        gitManager->checkoutAllFileInFolder();
+    });
+    connect(gitManager, &GitManager::reReadAllFile,
+            this, [=]() {
+        workArea->getEditorArea()->reReadAllFile();
+    });
+}
+
+WorkArea *MainWindow::getWorkArea() const
+{
+    return workArea;
 }
 

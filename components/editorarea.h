@@ -49,6 +49,10 @@ public:
 
     bool confirmOperationWithOpenFile();
 
+    QString getCurFileFullName();
+
+    void reReadAllFile();
+
 private:
     void initStyle();
     QString getCurEditorText();

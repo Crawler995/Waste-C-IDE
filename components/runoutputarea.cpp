@@ -59,14 +59,18 @@ RunOutputArea::RunOutputArea(QWidget *parent) : QWidget(parent)
 void RunOutputArea::outputInfo(const QString &info)
 {
     textEdit->moveCursor(QTextCursor::End);
-    textEdit->insertPlainText(info);
+    QTextCharFormat format;
+    format.setForeground(QColor(ColorBoard::lightGray));
+    textEdit->textCursor().insertText(info, format);
     textEdit->moveCursor(QTextCursor::End);
 }
 
 void RunOutputArea::outputError(const QString &error)
 {
     textEdit->moveCursor(QTextCursor::End);
-    textEdit->insertHtml(tr("<font color=\"#FF0000\">%1</font>").arg(QString(error).replace("\r\n", "<br>")));
+    QTextCharFormat format;
+    format.setForeground(QColor(255, 0, 0, 255));
+    textEdit->textCursor().insertText(error, format);
     textEdit->moveCursor(QTextCursor::End);
 }
 

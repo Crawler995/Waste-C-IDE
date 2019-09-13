@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "components/workarea.h"
+#include "features/gitmanager.h"
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -17,6 +18,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    WorkArea *getWorkArea() const;
 
 private:
     void initWindowSize();
@@ -42,10 +45,19 @@ private:
     QMenu *settingMenu;
     QAction *editorSettingAction;
 
+    QMenu *gitMenu;
+    QAction *gitInitAction;
+    QMenu *addMenu;
+    QAction *addCurFileAction, *addAllFileInFolderAction;
+    QMenu *checkoutMenu;
+    QAction *checkoutCurFileAction, *checkoutAllFileInFolderAction;
+
     QStatusBar *mainStatusBar;
     QLabel *cursorPositionLabel, *totalLineNumLabel;
 
     WorkArea *workArea;
+
+    GitManager *gitManager;
 };
 
 #endif // MAINWINDOW_H

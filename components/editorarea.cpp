@@ -197,6 +197,21 @@ bool EditorArea::confirmOperationWithOpenFile()
     return true;
 }
 
+QString EditorArea::getCurFileFullName()
+{
+    if(!confirmOperationWithOpenFile()) {
+        return "";
+    }
+    return editors[currentIndex()]->getFileName();
+}
+
+void EditorArea::reReadAllFile()
+{
+    foreach (Editor *editor, editors) {
+        editor->reReadFile();
+    }
+}
+
 void EditorArea::createEditor()
 {
     if(qobject_cast<WelcomePage*>(this->currentWidget())) {

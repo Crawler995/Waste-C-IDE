@@ -253,6 +253,17 @@ CommentManager *Editor::getCommentManager() const
     return commentManager;
 }
 
+void Editor::reReadFile()
+{
+    textEdit->clear();
+    QFile file(fileName);
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        textEdit->insertPlainText(QString::fromUtf8(file.readAll()));
+    }
+
+    file.close();
+}
+
 void Editor::initModel()
 {
     varInfoItemModel = new QStandardItemModel(this);

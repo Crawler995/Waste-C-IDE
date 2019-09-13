@@ -49,6 +49,8 @@ public:
 
     CommentManager *getCommentManager() const;
 
+    void reReadFile();
+
 private:
     TextEdit *textEdit;
     QHBoxLayout *layout;
