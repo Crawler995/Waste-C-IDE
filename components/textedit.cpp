@@ -68,6 +68,8 @@ void TextEdit::setFont(const QFont &font)
     QFontMetrics metrics(this->font());
     this->setTabStopWidth(4 * metrics.width(' '));
     completer->popup()->setFont(font);
+
+    updateLineNumberArea();
 }
 
 int TextEdit::getFirstVisibleBlockId()
@@ -121,13 +123,15 @@ void TextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
 
     QColor col_1(ColorBoard::keyWordRed);
     QColor col_0(ColorBoard::lightGray);
+    int width = fontMetrics().width(QLatin1Char('9'));
 
     while (block.isValid() && top <= event->rect().bottom()) {
         if (block.isVisible() && bottom >= event->rect().top()) {
             QString number = QString::number(blockNumber + 1);
             painter.setPen(QColor(120, 120, 120));
+            painter.setFont(this->font());
             painter.setPen((this->textCursor().blockNumber() == blockNumber) ? col_1 : col_0);
-            painter.drawText(-15, top,
+            painter.drawText(-width*2, top,
                              lineNumberArea->width(), fontMetrics().height(),
                              Qt::AlignRight, number);
         }
@@ -148,7 +152,8 @@ int TextEdit::lineNumberAreaWidth()
         ++digits;
     }
 
-    int space = 40 +  fontMetrics().width(QLatin1Char('9')) * (digits);
+    int width = fontMetrics().width(QLatin1Char('9'));
+    int space = width * 4 +  width * (digits);
 
     return space;
 }
