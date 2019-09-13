@@ -22,6 +22,8 @@ public:
     void checkoutCurFile();
     void checkoutAllFileInFolder();
 
+    void commitFile();
+
 private:
     QProcess *gitProcess;
     bool isCheckGitInstalled;

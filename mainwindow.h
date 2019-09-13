@@ -55,6 +55,7 @@ private:
     QAction *addCurFileAction, *addAllFileInFolderAction;
     QMenu *checkoutMenu;
     QAction *checkoutCurFileAction, *checkoutAllFileInFolderAction;
+    QAction *commitAction;
 
     QStatusBar *mainStatusBar;
     QLabel *cursorPositionLabel, *totalLineNumLabel;

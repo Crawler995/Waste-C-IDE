@@ -4,6 +4,10 @@
 #include <QEventLoop>
 #include <QMessageBox>
 #include <QFileInfo>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QComboBox>
 #include "../mainwindow.h"
 
 GitManager::GitManager(QWidget *parent) : QObject(parent)
@@ -156,6 +160,57 @@ void GitManager::checkoutAllFileInFolder()
         emit createOutputInfo("Git任务结束。\n\n");
         emit reReadAllFile();
     });
+}
+
+void GitManager::commitFile()
+{
+    if(!getIsInstallGit()) {
+        showGitMessage("本机未安装Git！", false);
+        return;
+    }
+
+    QString folderPath, fileName;
+    if(!getFileNameAndDir(folderPath, fileName)) {
+        return;
+    }
+
+
+    QWidget *dialog = new QWidget();
+    dialog->setWindowTitle("git commit");
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
+    QComboBox *box = new QComboBox(dialog);
+    box->addItems(QStringList() << "feat: A new feature"
+                                << "fix: A bug fix"
+                                << "build: Changes that affect the build system or external dependencies"
+                                << "ci: Changes to our CI configuration files and scripts"
+                                << "docs: Documentation only changes"
+                                << "perf: A code change that improves performance"
+                                << "refactor: A code change that neither fixes a bug nor adds a feature"
+                                << "style: Changes that do not affect the meaning of the code"
+                                << "test: Adding missing tests or correcting existing tests");
+
+    QLineEdit *commitLineEdit = new QLineEdit(dialog);
+    QPushButton *commitButton = new QPushButton("Commit", dialog);
+    layout->addWidget(box);
+    layout->addWidget(commitLineEdit);
+    layout->addWidget(commitButton);
+    dialog->setLayout(layout);
+
+    connect(commitButton, &QPushButton::clicked,
+            this, [=]() {
+        QRegExp regx("^([a-z]+):");
+        regx.setMinimal(true);
+        const QString commitType = box->currentText();
+        regx.indexIn(commitType);
+
+        const QString commitMessage = QString("%1: %2").arg(regx.capturedTexts()[1]).arg(commitLineEdit->text());
+        dialog->close();
+
+        executeGitCommand(folderPath, QString("git commit -m \"%1\"\n").arg(commitMessage));
+    });
+
+    dialog->show();
 }
 
 bool GitManager::getFileNameAndDir(QString &path, QString &fileName)

@@ -75,6 +75,7 @@ void MainWindow::createMenu() {
     checkoutMenu = gitMenu->addMenu(tr("checkout -- ...（撤销暂存区修改）"));
     checkoutCurFileAction = checkoutMenu->addAction(tr("checkout -- <this file>"));
     checkoutAllFileInFolderAction = checkoutMenu->addAction(tr("checkout -- <all file in this folder>"));
+    commitAction = gitMenu->addAction(tr("commit"));
 }
 
 void MainWindow::createStatusBar()
@@ -318,6 +319,10 @@ void MainWindow::connectSignalAndSlot()
             this, [=]() {
         gitManager->gitAddCurFile();
     });
+    connect(addAllFileInFolderAction, &QAction::triggered,
+            this, [=]() {
+        gitManager->gitAddAllFileInFolder();
+    });
     connect(checkoutCurFileAction, &QAction::triggered,
             this, [=]() {
         gitManager->checkoutCurFile();
@@ -329,6 +334,10 @@ void MainWindow::connectSignalAndSlot()
     connect(gitManager, &GitManager::reReadAllFile,
             this, [=]() {
         workArea->getEditorArea()->reReadAllFile();
+    });
+    connect(commitAction, &QAction::triggered,
+            this, [=]() {
+        gitManager->commitFile();
     });
 }
 
