@@ -21,6 +21,10 @@ public:
 
     WorkArea *getWorkArea() const;
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+
 private:
     void initWindowSize();
     void createMenu();

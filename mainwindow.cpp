@@ -5,7 +5,10 @@
 #include <QVector>
 #include <QPair>
 #include <QStandardItemModel>
+#include <QMimeData>
+#include <QUrl>
 #include <QDebug>
+#include <QFileInfo>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     gitManager = new GitManager(this);
 
     connectSignalAndSlot();
+
+    setAcceptDrops(true);
 }
 
 MainWindow::~MainWindow()
@@ -330,5 +335,24 @@ void MainWindow::connectSignalAndSlot()
 WorkArea *MainWindow::getWorkArea() const
 {
     return workArea;
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urls = event->mimeData()->urls();
+    if(urls.isEmpty())
+        return;
+
+    foreach(QUrl url, urls) {
+        QString fileName = url.toLocalFile();
+        if(QFileInfo(fileName).completeSuffix() == "c") {
+            workArea->getEditorArea()->openFile(fileName);
+        }
+    }
 }
 

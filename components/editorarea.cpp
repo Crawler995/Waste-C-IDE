@@ -443,6 +443,21 @@ void EditorArea::openFile()
     editors[currentIndex()]->setFileName(fileName);
 }
 
+void EditorArea::openFile(const QString &filePath)
+{
+    QFile file(filePath);
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        createEditor();
+        this->setTabText(this->currentIndex(), QFileInfo(filePath).fileName());
+        getCurEditor()->setText(QString::fromUtf8(file.readAll()));
+    }
+
+    file.close();
+
+    editors[currentIndex()]->setIsSave(true);
+    editors[currentIndex()]->setFileName(filePath);
+}
+
 void EditorArea::openSettingDialog()
 {
     bool ok;

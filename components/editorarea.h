@@ -25,6 +25,7 @@ public:
     void runCurFile();
     void compileRunCurFile();
     void openFile();
+    void openFile(const QString &filePath);
 
     void openSettingDialog();
 
