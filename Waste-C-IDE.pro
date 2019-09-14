@@ -55,3 +55,6 @@ HEADERS  += mainwindow.h \
     components/findorreplacedialog.h \
     features/commentmanager.h \
     features/gitmanager.h
+
+RESOURCES += \
+    assets.qrc

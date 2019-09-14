@@ -30,7 +30,10 @@ void WorkArea::initStyle() {
                               "font-size: 16px;"
                               "padding: 10px 30px 10px 30px;}"
                               "QTabBar::tab:selected{background: " + ColorBoard::black3 + "; "
-                              "border-bottom: 2px solid " + ColorBoard::blue + ";}");
+                              "border-bottom: 2px solid " + ColorBoard::blue + ";}"
+                              "QTabBar::close-button {"
+                              "image: url(:/icon/assets/close.png);"
+                              "}");
     debugInfoArea->setAttribute(Qt::WA_StyledBackground);
     debugInfoArea->setStyleSheet("background: " + ColorBoard::black2 + ";");
     runOutputArea->setAttribute(Qt::WA_StyledBackground);
