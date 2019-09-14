@@ -26,6 +26,7 @@ EditorArea::EditorArea(QWidget *parent) : QTabWidget(parent)
     connect(this, &QTabWidget::tabCloseRequested,
             this, [=](int index) {
         this->removeTab(index);
+        editors.remove(index);
     });
     connect(this, &QTabWidget::currentChanged,
             this, [=](int index) {
@@ -266,7 +267,6 @@ void EditorArea::saveCurEditorToFile()
         s << getCurEditorText();
     }
     file.close();
-
     this->setTabText(this->currentIndex(), QFileInfo(editor->getFileName()).fileName());
 
     editor->setIsSave(true);

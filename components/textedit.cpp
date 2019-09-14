@@ -459,26 +459,29 @@ void TextEdit::mousePressEvent(QMouseEvent *event)
 
     if(event->button() == Qt::LeftButton) {
         QTextCursor cursor = cursorForPosition(event->pos());
-        this->setTextCursor(cursor);
+        //this->setTextCursor(cursor);
 
-        if(getStringAroundCursor(LEFT, 1)[0] == '(') {
+        cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+        QChar c = cursor.selectedText()[0];
+        if(c == '(') {
             highLightMatchBracketFromLeft('(', ')');
         }
-        else if(getStringAroundCursor(LEFT, 1)[0] == '[') {
+        else if(c == '[') {
             highLightMatchBracketFromLeft('[', ']');
         }
-        else if(getStringAroundCursor(LEFT, 1)[0] == '{') {
+        else if(c == '{') {
             highLightMatchBracketFromLeft('{', '}');
         }
-        else if(getStringAroundCursor(LEFT, 1)[0] == ')') {
+        else if(c == ')') {
             highLightMatchBracketFromRight('(', ')');
         }
-        else if(getStringAroundCursor(LEFT, 1)[0] == ']') {
+        else if(c == ']') {
             highLightMatchBracketFromRight('[', ']');
         }
-        else if(getStringAroundCursor(LEFT, 1)[0] == '}') {
+        else if(c == '}') {
             highLightMatchBracketFromRight('{', '}');
         }
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
     }
 }
 
