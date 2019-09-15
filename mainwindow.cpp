@@ -113,7 +113,7 @@ void MainWindow::initStyle()
         "QStatusBar{background-color: " + ColorBoard::blue + ";}"
         "QStatusBar::item{border: none; padding: 0px;}"
 
-        "QScrollBar:vertical{background:transparent; width: 16px;}"
+        "QScrollBar:vertical{background:transparent; width: 24px;}"
         "QScrollBar::handle:vertical{background:" + ColorBoard::lightGray + ";"
         "border:2px solid transparent;"
         "border-radius:4px;}"
