@@ -10,7 +10,11 @@ CommentManager::CommentManager(TextEdit *parent)
 
 void CommentManager::showAllComment()
 {
-    foreach (Comment *comment, comments) {
+//    foreach (Comment *comment, comments) {
+//        comment->start.insertText(comment->content);
+//    }
+    for(int i = comments.length() - 1; i >= 0; i--) {
+        Comment *comment = comments[i];
         comment->start.insertText(comment->content);
     }
     isHide = false;
@@ -34,7 +38,7 @@ void CommentManager::hideAllComment()
 void CommentManager::updateComment()
 {
     comments.clear();
-    QRegExp singleLineCommentRegx("//[^\n]*");
+    QRegExp singleLineCommentRegx("//[^/][^\n]*");
     QRegExp multLineCommentRegx("/\\*.*\\*/");
     multLineCommentRegx.setMinimal(true);
     findLineComment(singleLineCommentRegx);
